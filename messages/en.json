@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "docs": "Docs",
+    "ecosystem": "Open Ecosystem",
+    "manager_ui": "Database Manager UI",
+    "github": "Star on GitHub"
+  },
+  "hero": {
+    "badge": "Open Source High-Performance Vector Database",
+    "title": "Scintirete",
+    "subtitle": "Illuminate the data web, discover infinite neighbors",
+    "description": "Simple, lightweight, production-ready high-performance vector database designed for small to medium projects and edge computing scenarios",
+    "start_btn": "Get Started",
+    "learn_more": "Learn More",
+    "features": {
+      "search_speed": "Millisecond",
+      "search_speed_desc": "Search Response",
+      "algorithm": "HNSW",
+      "algorithm_desc": "Graph Index Algorithm",
+      "interface": "Dual API",
+      "interface_desc": "gRPC + HTTP",
+      "platform": "Cross-Platform",
+      "platform_desc": "Multi-Architecture Support"
+    }
+  },
+  "features": {
+    "title": "Core Features",
+    "subtitle": "Vector database designed for modern applications, combining high performance with ease of use",
+    "simple": {
+      "title": "Simple & Lightweight",
+      "description": "Core logic implemented independently, no redundant dependencies, focusing on the essential functions of vector search"
+    },
+    "performance": {
+      "title": "High Performance",
+      "description": "Based on in-memory HNSW graph index, providing millisecond-level nearest neighbor search"
+    },
+    "security": {
+      "title": "Data Security",
+      "description": "Implemented Redis-like AOF + RDB efficient persistence mechanism based on flatbuffers"
+    },
+    "interface": {
+      "title": "Modern Interface",
+      "description": "Native support for both gRPC and HTTP/JSON dual interfaces, easy to integrate into any modern application architecture"
+    },
+    "operations": {
+      "title": "Easy Operations",
+      "description": "Provides structured logging, audit logs, Prometheus metrics and convenient command-line tools"
+    },
+    "cross_platform": {
+      "title": "Cross-Platform",
+      "description": "Supports Linux, macOS, Windows and arm64, amd64 architectures out of the box"
+    }
+  },
+  "quickstart": {
+    "title": "Quick Start",
+    "subtitle": "Get Scintirete vector database up and running in minutes",
+    "requirements": {
+      "title": "Requirements",
+      "go": "Go 1.24+ (required for building from source)",
+      "docker": "Docker (optional, for containerized deployment)"
+    },
+    "installation": {
+      "title": "Installation",
+      "binary": "Download pre-compiled binary files",
+      "source": "Build from source code",
+      "docker": "Docker containerized deployment"
+    },
+    "startup": {
+      "title": "Start Service",
+      "grpc": "gRPC API: Port 9090",
+      "http": "HTTP/JSON API: Port 8080",
+      "compose": "Supports docker-compose"
+    },
+    "examples": {
+      "title": "Quick Start Examples",
+      "binary_title": "Binary Startup",
+      "binary_comment": "# Download and start",
+      "binary_cmd": "./bin/scintirete-server",
+      "docker_title": "Docker Startup",
+      "docker_comment": "# Pull and run",
+      "docker_cmd1": "docker run -p 8080:8080 -p 9090:9090",
+      "docker_cmd2": "ghcr.io/scintirete/scintirete:latest"
+    },
+    "download_guide": {
+      "title": "Binary File Download",
+      "subtitle": "Choose the version suitable for your operating system and architecture",
+      "download_btn": "Download from GitHub Releases",
+      "platforms": {
+        "linux": "Linux",
+        "windows": "Windows", 
+        "macos": "macOS",
+        "freebsd": "FreeBSD",
+        "openbsd": "OpenBSD"
+      },
+      "architectures": {
+        "amd64": "x86_64",
+        "arm64": "ARM64",
+        "arm": "ARM v7"
+      },
+      "after_download": "After download and startup, you can access:",
+      "manager_ui_link": "Go to Database Manager UI",
+      "screenshot_placeholder": "Manager UI Interface Preview"
+    },
+    "view_docs": "View Complete Documentation"
+  },
+  "cta": {
+    "title": "Ready to get started?",
+    "subtitle": "Join our open source community and experience the power of next-generation vector database",
+    "view_source": "View Source Code",
+    "try_ui": "Try Manager UI"
+  },
+  "footer": {
+    "copyright": "© 2024 Scintirete. Open Source High-Performance Vector Database"
+  }
+}

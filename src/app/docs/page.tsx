@@ -189,7 +189,7 @@ export default async function DocsPage({ searchParams }: DocsPageProps) {
                 </a>
               </Button>
               <Button size="sm" asChild>
-                <a href="https://manager.scintirete.wj2015.com" target="_blank" rel="noopener noreferrer">
+                <a href="http://scintirete-manager-ui.cloud.wj2015.com" target="_blank" rel="noopener noreferrer">
                   <Monitor className="w-4 h-4 mr-2" />
                   管理UI
                   <ExternalLink className="w-3 h-3 ml-1" />

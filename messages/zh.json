@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "docs": "文档",
+    "ecosystem": "开源生态",
+    "manager_ui": "数据库管理UI",
+    "github": "Star on GitHub"
+  },
+  "hero": {
+    "badge": "开源高性能向量数据库",
+    "title": "Scintirete",
+    "subtitle": "点亮数据之网，发现无限近邻",
+    "description": "简单、轻量、面向生产的高性能向量数据库，为中小型项目和边缘计算场景而设计",
+    "start_btn": "开始使用",
+    "learn_more": "了解更多",
+    "features": {
+      "search_speed": "毫秒级",
+      "search_speed_desc": "搜索响应",
+      "algorithm": "HNSW",
+      "algorithm_desc": "图索引算法",
+      "interface": "双接口",
+      "interface_desc": "gRPC + HTTP",
+      "platform": "跨平台",
+      "platform_desc": "多架构支持"
+    }
+  },
+  "features": {
+    "title": "核心特性",
+    "subtitle": "为现代应用而设计的向量数据库，兼具高性能与易用性",
+    "simple": {
+      "title": "简单轻量",
+      "description": "核心逻辑自主实现，无冗余依赖，专注于向量搜索的核心功能"
+    },
+    "performance": {
+      "title": "高性能",
+      "description": "基于内存中的 HNSW 图索引，提供毫秒级的最近邻搜索"
+    },
+    "security": {
+      "title": "数据安全",
+      "description": "基于 flatbuffers 实现了类似于 Redis 的 AOF + RDB 高效持久化机制"
+    },
+    "interface": {
+      "title": "现代接口",
+      "description": "原生支持 gRPC 和 HTTP/JSON 双接口，易于集成到任何现代应用架构中"
+    },
+    "operations": {
+      "title": "易于运维",
+      "description": "提供结构化日志、审计日志、Prometheus 指标和便捷的命令行工具"
+    },
+    "cross_platform": {
+      "title": "跨平台",
+      "description": "支持 Linux、macOS、Windows 及 arm64 、amd64 架构开箱即用"
+    }
+  },
+  "quickstart": {
+    "title": "快速上手",
+    "subtitle": "几分钟即可启动并运行 Scintirete 向量数据库",
+    "requirements": {
+      "title": "环境要求",
+      "go": "Go 1.24+（从源码构建时需要）",
+      "docker": "Docker（可选，用于容器化部署）"
+    },
+    "installation": {
+      "title": "安装方式",
+      "binary": "下载预编译二进制文件",
+      "source": "从源码构建",
+      "docker": "Docker 容器化部署"
+    },
+    "startup": {
+      "title": "启动服务",
+      "grpc": "gRPC API：9090 端口",
+      "http": "HTTP/JSON API：8080 端口",
+      "compose": "支持 docker-compose"
+    },
+    "examples": {
+      "title": "快速启动示例",
+      "binary_title": "二进制文件启动",
+      "binary_comment": "# 下载并启动",
+      "binary_cmd": "./bin/scintirete-server",
+      "docker_title": "Docker 启动",
+      "docker_comment": "# 拉取并运行",
+      "docker_cmd1": "docker run -p 8080:8080 -p 9090:9090",
+      "docker_cmd2": "ghcr.io/scintirete/scintirete:latest"
+    },
+    "download_guide": {
+      "title": "二进制文件下载",
+      "subtitle": "选择适合您操作系统和架构的版本",
+      "download_btn": "前往 GitHub Releases 下载",
+      "platforms": {
+        "linux": "Linux",
+        "windows": "Windows",
+        "macos": "macOS",
+        "freebsd": "FreeBSD",
+        "openbsd": "OpenBSD"
+      },
+      "architectures": {
+        "amd64": "x86_64",
+        "arm64": "ARM64",
+        "arm": "ARM v7"
+      },
+      "after_download": "下载并启动完成后，您可以访问：",
+      "manager_ui_link": "前往数据库管理UI",
+      "screenshot_placeholder": "管理UI界面预览"
+    },
+    "view_docs": "查看完整文档"
+  },
+  "cta": {
+    "title": "准备好开始了吗？",
+    "subtitle": "加入我们的开源社区，体验下一代向量数据库的强大功能",
+    "view_source": "查看源码",
+    "try_ui": "体验管理UI"
+  },
+  "footer": {
+    "copyright": "© 2024 Scintirete. 开源高性能向量数据库"
+  }
+}
