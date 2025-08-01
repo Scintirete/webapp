@@ -1,25 +1,9 @@
-'use client'
-
-import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ChevronDown, Github, ExternalLink, BookOpen, LayoutDashboard, Sparkles } from 'lucide-react'
 
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToFeatures = () => {
-    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
@@ -42,9 +26,7 @@ export default function Home() {
       </div>
 
       {/* 导航栏 */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg' : 'bg-transparent'
-      }`}>
+      <nav className="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
@@ -117,9 +99,11 @@ export default function Home() {
                   开始使用
                 </a>
               </Button>
-              <Button size="lg" variant="outline" onClick={scrollToFeatures}>
-                了解更多
-                <ChevronDown className="w-4 h-4 ml-2" />
+              <Button size="lg" variant="outline" asChild>
+                <a href="#features">
+                  了解更多
+                  <ChevronDown className="w-4 h-4 ml-2" />
+                </a>
               </Button>
             </div>
 
@@ -371,22 +355,7 @@ export default function Home() {
         </div>
       </footer>
 
-      <style jsx global>{`
-        @keyframes sparkle {
-          0%, 100% {
-            opacity: 0;
-            transform: scale(0) rotate(0deg);
-          }
-          50% {
-            opacity: 1;
-            transform: scale(1) rotate(180deg);
-          }
-        }
-        
-        .animate-sparkle {
-          animation: sparkle 3s ease-in-out infinite;
-        }
-      `}</style>
+
     </div>
   )
 }

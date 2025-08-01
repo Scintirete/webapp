@@ -95,27 +95,9 @@ const getDocContent = cache(async (docId: string): Promise<DocContent | null> =>
   }
 })
 
-// 从内容中提取标题
+// 从文件名生成标题
 function extractTitleFromContent(content: string, fallback: string): string {
-  const lines = content.split('\n')
-  
-  // 查找第一个 # 标题
-  for (const line of lines) {
-    const match = line.match(/^#\s+(.+)$/)
-    if (match) {
-      return match[1].trim()
-    }
-  }
-  
-  // 如果没有找到 # 标题，查找第一个 ## 标题
-  for (const line of lines) {
-    const match = line.match(/^##\s+(.+)$/)
-    if (match) {
-      return match[1].trim()
-    }
-  }
-  
-  // 如果都没有，使用文件名作为标题
+  // 直接使用文件名转换为标题，不再从内容中提取
   return fallback
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
