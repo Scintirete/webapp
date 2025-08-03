@@ -112,94 +112,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </section>
 
-        {/* 特性区域 */}
-        <section id="features" className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                {t('features.title')}
-              </h2>
-              <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                {t('features.subtitle')}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="border-l-4 border-l-yellow-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-yellow-500" />
-                    <span>{t('features.simple.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.simple.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="border-l-4 border-l-orange-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-orange-500" />
-                    <span>{t('features.performance.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.performance.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="border-l-4 border-l-red-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-red-500" />
-                    <span>{t('features.security.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.security.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="border-l-4 border-l-purple-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-purple-500" />
-                    <span>{t('features.interface.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.interface.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="border-l-4 border-l-blue-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-blue-500" />
-                    <span>{t('features.operations.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.operations.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card className="border-l-4 border-l-green-500">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Sparkles className="w-5 h-5 text-green-500" />
-                    <span>{t('features.cross_platform.title')}</span>
-                  </CardTitle>
-                  <CardDescription>
-                    {t('features.cross_platform.description')}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-          </div>
-        </section>
-
         {/* 快速上手区域 */}
         <section className="py-20 px-4 bg-white dark:bg-slate-900">
           <div className="max-w-6xl mx-auto">
@@ -291,12 +203,12 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   <h4 className="font-semibold mb-4 text-center text-blue-600 dark:text-blue-400">
                     {t('quickstart.download_guide.screenshot_placeholder')}
                   </h4>
-                  <div className="bg-slate-200 dark:bg-slate-600 rounded-lg h-32 flex items-center justify-center">
-                    <div className="text-slate-500 dark:text-slate-400 text-center">
-                      <LayoutDashboard className="w-8 h-8 mx-auto mb-2" />
-                      <p className="text-sm">管理UI界面预览</p>
-                      <p className="text-xs mt-1 opacity-70">即将上线</p>
-                    </div>
+                  <div className="bg-slate-200 dark:bg-slate-600 rounded-lg overflow-hidden">
+                    <img 
+                      src="/manager-ui.png" 
+                      alt="Scintirete Manager UI 界面预览"
+                      className="w-full h-auto object-cover rounded-lg"
+                    />
                   </div>
                 </div>
               </div>
@@ -330,6 +242,94 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   {t('quickstart.view_docs')}
                 </a>
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* 特性区域 */}
+        <section id="features" className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+                {t('features.title')}
+              </h2>
+              <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                {t('features.subtitle')}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="border-l-4 border-l-yellow-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-yellow-500" />
+                    <span>{t('features.simple.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.simple.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border-l-4 border-l-orange-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-orange-500" />
+                    <span>{t('features.performance.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.performance.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border-l-4 border-l-red-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-red-500" />
+                    <span>{t('features.security.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.security.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border-l-4 border-l-purple-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-purple-500" />
+                    <span>{t('features.interface.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.interface.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border-l-4 border-l-blue-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-blue-500" />
+                    <span>{t('features.operations.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.operations.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card className="border-l-4 border-l-green-500">
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Sparkles className="w-5 h-5 text-green-500" />
+                    <span>{t('features.cross_platform.title')}</span>
+                  </CardTitle>
+                  <CardDescription>
+                    {t('features.cross_platform.description')}
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             </div>
           </div>
         </section>
@@ -368,7 +368,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
-                  src={`/${locale || 'en'}/logo.png`}
+                  src="/logo.png"
                   alt="Scintirete Logo"
                   className="w-full h-full object-cover"
                 />

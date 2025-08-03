@@ -10,8 +10,7 @@ export default createMiddleware({
   // Use prefix for non-default locales only
   localePrefix: 'as-needed',
 
-  // Disable automatic locale detection to always default to 'en'
-  localeDetection: false
+  localeDetection: true
 });
 
 export const config = {
@@ -21,6 +20,6 @@ export const config = {
     // - ../public (static files)
     // - ../api (API routes)
     // - ../_next (internal Next.js files)
-    '/((?!api|_next|favicon.ico).*)'
+    '/((?!api|_next|favicon.ico|logo.png|manager-ui.png).*)'
   ]
 };

@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  webapp:
+    image: ghcr.io/scintirete/webapp:latest
+    container_name: scintirete-webapp
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - HOSTNAME=0.0.0.0
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  default:
+    name: scintirete-network
