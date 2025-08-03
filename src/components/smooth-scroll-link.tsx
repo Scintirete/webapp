@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, MousePointer } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface SmoothScrollLinkProps {
@@ -34,7 +34,7 @@ export function SmoothScrollLink({ targetId, children, className }: SmoothScroll
       {children || (
         <>
           {t('learn_more')}
-          <ChevronDown className="w-4 h-4 ml-2" />
+          <MousePointer className="w-4 h-4 ml-2" />
         </>
       )}
     </Button>

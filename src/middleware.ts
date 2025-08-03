@@ -8,7 +8,10 @@ export default createMiddleware({
   defaultLocale: 'en',
 
   // Use prefix for non-default locales only
-  localePrefix: 'as-needed'
+  localePrefix: 'as-needed',
+
+  // Disable automatic locale detection to always default to 'en'
+  localeDetection: false
 });
 
 export const config = {

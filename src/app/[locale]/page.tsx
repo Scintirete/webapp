@@ -2,14 +2,15 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Github, ExternalLink, BookOpen, LayoutDashboard, Sparkles, Download } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { EcosystemDropdown } from '@/components/ecosystem-dropdown'
 import { SmoothScrollLink } from '@/components/smooth-scroll-link'
 import { SparkleBackground } from '@/components/sparkle-background'
 
-export default function Home() {
-  const t = useTranslations();
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
@@ -23,7 +24,7 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
-                  src="/logo.png"
+                  src={`/${locale || 'en'}/logo.png`}
                   alt="Scintirete Logo"
                   className="w-full h-full object-cover"
                 />
@@ -367,7 +368,7 @@ export default function Home() {
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <div className="w-6 h-6 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
-                  src="/logo.png"
+                  src={`/${locale || 'en'}/logo.png`}
                   alt="Scintirete Logo"
                   className="w-full h-full object-cover"
                 />

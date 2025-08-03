@@ -1,8 +1,9 @@
-import { Sidebar } from '@/components/docs-sidebar'
+import { DocsSidebar } from '@/components/docs-sidebar'
 import { MarkdownRenderer } from '@/lib/markdown-renderer'
-import { getDocumentByPath, getDocumentStructure } from '@/lib/docs'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
 import { notFound } from 'next/navigation'
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
 export default async function DocsPage({
   params,
@@ -11,29 +12,36 @@ export default async function DocsPage({
   params: Promise<{ locale: string }>;
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const t = useTranslations();
   const { locale } = await params;
+  const t = await getTranslations();
   
   // 获取查询参数中的路径，默认为根路径
   const path = typeof searchParams.path === 'string' ? searchParams.path : ''
   
   try {
-    // 根据语言获取文档结构
-    const docsPath = locale === 'zh' ? 'docs/zh' : 'docs/en'
-    const structure = await getDocumentStructure(docsPath)
+    // 根据语言获取文档内容
+    const docPath = path || 'index'
+    const filePath = join(process.cwd(), 'docs', locale, `${docPath}.md`)
     
-    // 获取文档内容
-    let document
-    if (path) {
-      document = await getDocumentByPath(`${docsPath}/${path}`)
-    } else {
-      // 默认显示索引页面
-      document = await getDocumentByPath(`${docsPath}/index.md`)
+    let content: string
+    try {
+      content = await readFile(filePath, 'utf-8')
+    } catch (error) {
+      console.error(`Error reading file ${filePath}:`, error)
+      notFound()
+      return
     }
 
-    if (!document) {
-      notFound()
-    }
+    // 简单的文档结构，暂时硬编码
+    const structure = [
+      {
+        id: 'index',
+        title: locale === 'zh' ? '文档首页' : 'Documentation Home',
+        type: 'file' as const,
+        path: '',
+        children: []
+      }
+    ]
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
@@ -45,7 +53,7 @@ export default async function DocsPage({
                 <a href={`/${locale}`} className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                     <img
-                      src="/logo.png"
+                      src={`/${locale}/logo.png`}
                       alt="Scintirete Logo"
                       className="w-full h-full object-cover"
                     />
@@ -69,13 +77,13 @@ export default async function DocsPage({
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* 侧边栏 */}
             <div className="lg:col-span-1">
-              <Sidebar structure={structure} currentPath={path} />
+              <DocsSidebar docsStructure={structure} defaultExpandedFolders={new Set()} />
             </div>
 
             {/* 主要内容区域 */}
             <div className="lg:col-span-3">
               <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-800 p-8">
-                <MarkdownRenderer content={document.content} />
+                <MarkdownRenderer content={content} />
               </div>
             </div>
           </div>
