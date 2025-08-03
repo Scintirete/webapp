@@ -13,6 +13,9 @@ COPY . .
 # 安装依赖
 RUN pnpm install
 
+# prisma
+RUN pnpm run db:generate
+
 # 构建应用
 RUN pnpm run build
 
