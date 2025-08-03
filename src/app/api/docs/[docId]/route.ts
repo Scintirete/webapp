@@ -3,10 +3,11 @@ import { getDocContent } from '@/lib/docs-scanner'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { docId: string } }
+  { params }: { params: Promise<{ docId: string }> }
 ) {
   try {
-    const { docId } = params
+    const resolvedParams = await params;
+    const { docId } = resolvedParams
     
     // 使用缓存的文档内容获取函数
     const docContent = await getDocContent(docId)

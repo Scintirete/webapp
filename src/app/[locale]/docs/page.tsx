@@ -3,20 +3,22 @@ import { MarkdownRenderer } from '@/lib/markdown-renderer'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 
 export default async function DocsPage({
   params,
   searchParams,
 }: {
   params: Promise<{ locale: string }>;
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { locale } = await params;
+  const resolvedSearchParams = await searchParams;
   const t = await getTranslations();
   
   // 获取查询参数中的路径，默认为根路径
-  const path = typeof searchParams.path === 'string' ? searchParams.path : ''
+  const path = typeof resolvedSearchParams.path === 'string' ? resolvedSearchParams.path : ''
   
   try {
     // 根据语言获取文档内容
@@ -50,7 +52,7 @@ export default async function DocsPage({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <div className="flex items-center space-x-4">
-                <a href={`/${locale}`} className="flex items-center space-x-2">
+                <Link href={`/${locale}`} className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                     <img
                       src={`/${locale}/logo.png`}
@@ -61,7 +63,7 @@ export default async function DocsPage({
                   <span className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
                     Scintirete
                   </span>
-                </a>
+                </Link>
                 <div className="hidden sm:block text-slate-600 dark:text-slate-400">
                   /
                 </div>

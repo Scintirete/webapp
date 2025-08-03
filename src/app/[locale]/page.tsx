@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/language-switcher'
 import { EcosystemDropdown } from '@/components/ecosystem-dropdown'
 import { SmoothScrollLink } from '@/components/smooth-scroll-link'
 import { SparkleBackground } from '@/components/sparkle-background'
+import Link from 'next/link'
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -35,13 +36,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </div>
             
             <div className="hidden md:flex items-center space-x-6">
-              <a 
+              <Link 
                 href="/docs" 
                 className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
               >
                 <BookOpen className="w-4 h-4" />
                 <span>{t('nav.docs')}</span>
-              </a>
+              </Link>
               <EcosystemDropdown />
               <LanguageSwitcher />
             </div>
@@ -237,10 +238,10 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
             <div className="mt-12 text-center">
               <Button size="lg" asChild className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                <a href="/docs">
+                <Link href="/docs">
                   <BookOpen className="w-5 h-5 mr-2" />
                   {t('quickstart.view_docs')}
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

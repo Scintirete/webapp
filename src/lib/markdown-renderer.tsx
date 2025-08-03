@@ -33,9 +33,10 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
         ]}
         components={{
           // 代码块渲染
-          code({ node, inline, className, children, ...props }) {
+          code({ node, className, children, ...props }: any) {
             const match = /language-(\w+)/.exec(className || '')
             const language = match ? match[1] : ''
+            const inline = !language
             
             return !inline && language ? (
               <SyntaxHighlighter

@@ -18,7 +18,7 @@ import { getDocsStructure, getDocContent, DocNode, DocContent } from '@/lib/docs
 import { DocsSidebar } from '@/components/docs-sidebar'
 
 interface DocsPageProps {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export default async function DocsPage({ searchParams }: DocsPageProps) {

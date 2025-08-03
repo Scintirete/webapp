@@ -139,7 +139,7 @@ function buildTreeStructure(flatList: DocNode[]): DocNode[] {
   const root: DocNode[] = []
   
   // 按照类别分组
-  const categories = {
+  const categories: Record<string, string[]> = {
     '基础': ['index', 'getting-started', 'concepts'],
     '开发': ['api', 'deployment'],
     '工具': ['manager-ui'],
