@@ -37,7 +37,7 @@ export function MarkdownRenderer({ content, className = '', locale = 'zh' }: Mar
     // 处理相对路径的markdown文件链接
     if (href.endsWith('.md')) {
       const docPath = href.replace('.md', '')
-      return `/${locale}/docs?path=${encodeURIComponent(docPath)}`
+      return `/${locale}/docs?path=${docPath}`
     }
     
     // 处理其他相对路径
@@ -46,7 +46,7 @@ export function MarkdownRenderer({ content, className = '', locale = 'zh' }: Mar
       const cleanPath = href.replace(/^\.\.?\//g, '')
       if (cleanPath.endsWith('.md')) {
         const docPath = cleanPath.replace('.md', '')
-        return `/${locale}/docs?path=${encodeURIComponent(docPath)}`
+        return `/${locale}/docs?path=${docPath}`
       }
     }
     
@@ -70,19 +70,42 @@ export function MarkdownRenderer({ content, className = '', locale = 'zh' }: Mar
           code({ node, className, children, ...props }: any) {
             const match = /language-(\w+)/.exec(className || '')
             const language = match ? match[1] : ''
-            const inline = !language
             
-            // 确保children正确转换为字符串
-            const codeContent = Array.isArray(children) 
-              ? children.join('') 
-              : typeof children === 'string' 
-                ? children 
-                : String(children || '')
+            // 递归提取文本内容的函数
+            const extractTextContent = (content: any): string => {
+              if (content === null || content === undefined) return ''
+              if (typeof content === 'string') return content
+              if (typeof content === 'number') return String(content)
+              if (Array.isArray(content)) {
+                return content.map(extractTextContent).join('')
+              }
+              if (typeof content === 'object') {
+                if (content.props && content.props.children) {
+                  return extractTextContent(content.props.children)
+                }
+                if (content.children) {
+                  return extractTextContent(content.children)
+                }
+                // 对于其他对象，尝试提取有用的文本
+                if (content.toString && content.toString !== Object.prototype.toString) {
+                  const str = content.toString()
+                  if (str !== '[object Object]') return str
+                }
+              }
+              return ''
+            }
             
-            return !inline && language ? (
+            const codeContent = extractTextContent(children)
+            
+            // 判断是否是代码块：有className（即使没有语言）或者内容包含换行符
+            const isCodeBlock = className || codeContent.includes('\n')
+            // 确定渲染语言，plaintext 和 text 使用 text 作为语言
+            const renderLanguage = language === 'plaintext' || language === 'text' || !language ? 'text' : language
+            
+            return isCodeBlock ? (
               <SyntaxHighlighter
                 style={isDark ? oneDark : oneLight}
-                language={language}
+                language={renderLanguage}
                 PreTag="div"
                 className="rounded-lg !mt-4 !mb-4"
                 customStyle={{
@@ -233,9 +256,18 @@ export function MarkdownRenderer({ content, className = '', locale = 'zh' }: Mar
           
           // 图片样式
           img({ src, alt, ...props }) {
+            // 处理相对路径，将 (../)+ 转换为 /
+            let imgSrc = src
+            if (imgSrc && typeof imgSrc === 'string') {
+              // 将多个 ../ 替换为根路径
+              imgSrc = imgSrc.replace(/^(\.\.\/)+/, '/')
+              // 如果以 ./ 开头，也转为根路径
+              imgSrc = imgSrc.replace(/^\.\//, '/')
+            }
+            
             return (
               <img
-                src={src}
+                src={imgSrc}
                 alt={alt}
                 className="max-w-full h-auto rounded-lg my-4 border border-slate-200 dark:border-slate-700"
                 {...props}

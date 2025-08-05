@@ -12,6 +12,7 @@ import {
   FileText
 } from 'lucide-react'
 import { DocNode } from '@/lib/docs-scanner'
+import { useTranslations } from 'next-intl'
 
 interface DocsSidebarClientProps {
   docsStructure: DocNode[]
@@ -28,6 +29,7 @@ export function DocsSidebarClient({
 }: DocsSidebarClientProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(defaultExpandedFolders)
   const selectedDoc = currentPath || 'index'
+  const t = useTranslations('docs')
 
   const toggleFolder = (folderId: string) => {
     const newExpanded = new Set(expandedFolders)
@@ -100,7 +102,7 @@ export function DocsSidebarClient({
       <div className="p-4">
         <div className="mb-4">
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
-            文档目录
+            {t('sidebar_title')}
           </h3>
           <Separator />
         </div>

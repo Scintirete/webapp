@@ -109,6 +109,9 @@
     "view_source": "View Source Code",
     "try_ui": "Try Manager UI"
   },
+  "docs": {
+    "sidebar_title": "Documentation"
+  },
   "footer": {
     "copyright": "© 2024 Scintirete. Open Source High-Performance Vector Database"
   }

@@ -45,7 +45,7 @@
 
 ## 2. Directory Structure Planning
 
-```
+```text
 scintirete/
 ├── cmd/                          # Command-line tool entry points
 │   ├── scintirete-server/        # Server startup tool

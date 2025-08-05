@@ -109,6 +109,9 @@
     "view_source": "查看源码",
     "try_ui": "体验管理UI"
   },
+  "docs": {
+    "sidebar_title": "文档目录"
+  },
   "footer": {
     "copyright": "© 2024 Scintirete. 开源高性能向量数据库"
   }
