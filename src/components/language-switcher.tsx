@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Globe } from 'lucide-react';
+import { ChevronDown, Globe } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useLocale } from 'next-intl';
 
@@ -22,16 +22,11 @@ export function LanguageSwitcher() {
   const locale = useLocale();
 
   const handleLanguageChange = (newLocale: string) => {
-    const newPath = `${newLocale === 'en' ? '/' : "/" + newLocale}`;
-    console.log("switching to", newLocale, newPath);
-    router.push(newPath);
-    // // For 'as-needed' localePrefix: default locale (en) has no prefix, others do
-    // const currentPath = pathname.replace(`/${locale}`, '') || '/';
-    // const newPath = `/${newLocale}${currentPath}`;
+    // For 'as-needed' localePrefix: default locale (en) has no prefix, others do
+    const currentPath = pathname.replace(`/${locale}`, '') || '/';
+    const newPath = `/${newLocale}${currentPath}`;
 
-    // console.log("switching", locale, newLocale, currentPath, newPath);
-    
-    // router.push(newPath);
+    router.push(newPath);
   };
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];
@@ -40,9 +35,10 @@ export function LanguageSwitcher() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-          <Globe className="w-4 h-4" />
+          {/* <Globe className="w-4 h-4" /> */}
           <span className="hidden md:inline">{currentLanguage.flag} {currentLanguage.name}</span>
           <span className="md:hidden">{currentLanguage.flag}</span>
+          <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

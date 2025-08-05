@@ -3,14 +3,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Github, ExternalLink, BookOpen, LayoutDashboard, Sparkles, Download } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
-import { LanguageSwitcher } from '@/components/language-switcher'
-import { EcosystemDropdown } from '@/components/ecosystem-dropdown'
 import { SmoothScrollLink } from '@/components/smooth-scroll-link'
 import { SparkleBackground } from '@/components/sparkle-background'
+import { SiteNavigation } from '@/components/site-navigation'
 import Link from 'next/link'
 
-export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
+export default async function Home() {
   const t = await getTranslations();
 
   return (
@@ -19,45 +17,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       <SparkleBackground />
 
       {/* 导航栏 */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
-                <img
-                  src={`/logo.png`}
-                  alt="Scintirete Logo"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
-                Scintirete
-              </span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-6">
-              <Link 
-                href="/docs" 
-                className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
-              >
-                <BookOpen className="w-4 h-4" />
-                <span>{t('nav.docs')}</span>
-              </Link>
-              <EcosystemDropdown />
-            </div>
-
-            <div className="hidden md:flex items-center space-x-6">
-              <LanguageSwitcher />
-              <Button asChild>
-                <a href="https://github.com/Scintirete/Scintirete/" target="_blank" rel="noopener noreferrer">
-                  <Github className="w-4 h-4 mr-2" />
-                  {t('nav.github')}
-                </a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <SiteNavigation />
 
       {/* 主要内容区域 */}
       <main className="pt-20">

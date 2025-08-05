@@ -1,10 +1,10 @@
 import { DocsSidebar } from '@/components/docs-sidebar'
 import { MarkdownRenderer } from '@/lib/markdown-renderer'
+import { DocsNavigation } from '@/components/docs-navigation'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
-import Link from 'next/link'
 
 export default async function DocsPage({
   params,
@@ -48,32 +48,7 @@ export default async function DocsPage({
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
         {/* 导航栏 */}
-        <nav className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <div className="flex items-center space-x-4">
-                <Link href={`/${locale}`} className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img
-                      src={`/${locale}/logo.png`}
-                      alt="Scintirete Logo"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <span className="text-xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
-                    Scintirete
-                  </span>
-                </Link>
-                <div className="hidden sm:block text-slate-600 dark:text-slate-400">
-                  /
-                </div>
-                <div className="hidden sm:block font-medium text-slate-900 dark:text-slate-100">
-                  {t('nav.docs')}
-                </div>
-              </div>
-            </div>
-          </div>
-        </nav>
+        <DocsNavigation locale={locale} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
