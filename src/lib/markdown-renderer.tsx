@@ -13,11 +13,45 @@ import { useTheme } from 'next-themes'
 interface MarkdownRendererProps {
   content: string
   className?: string
+  locale?: string
 }
 
-export function MarkdownRenderer({ content, className = '' }: MarkdownRendererProps) {
+export function MarkdownRenderer({ content, className = '', locale = 'zh' }: MarkdownRendererProps) {
   const { theme } = useTheme()
   const isDark = theme === 'dark'
+  
+  // 转换相对链接为正确的路由链接
+  const transformLink = (href: string) => {
+    if (!href) return href
+    
+    // 外部链接保持不变
+    if (href.startsWith('http://') || href.startsWith('https://')) {
+      return href
+    }
+    
+    // 锚点链接保持不变
+    if (href.startsWith('#')) {
+      return href
+    }
+    
+    // 处理相对路径的markdown文件链接
+    if (href.endsWith('.md')) {
+      const docPath = href.replace('.md', '')
+      return `/${locale}/docs?path=${encodeURIComponent(docPath)}`
+    }
+    
+    // 处理其他相对路径
+    if (href.startsWith('./') || href.startsWith('../')) {
+      // 简化处理，移除相对路径前缀
+      const cleanPath = href.replace(/^\.\.?\//g, '')
+      if (cleanPath.endsWith('.md')) {
+        const docPath = cleanPath.replace('.md', '')
+        return `/${locale}/docs?path=${encodeURIComponent(docPath)}`
+      }
+    }
+    
+    return href
+  }
 
   return (
     <div className={`prose prose-slate dark:prose-invert max-w-none ${className}`}>
@@ -38,6 +72,13 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
             const language = match ? match[1] : ''
             const inline = !language
             
+            // 确保children正确转换为字符串
+            const codeContent = Array.isArray(children) 
+              ? children.join('') 
+              : typeof children === 'string' 
+                ? children 
+                : String(children || '')
+            
             return !inline && language ? (
               <SyntaxHighlighter
                 style={isDark ? oneDark : oneLight}
@@ -50,14 +91,14 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
                   fontSize: '0.875rem'
                 }}
               >
-                {String(children).replace(/\n$/, '')}
+                {codeContent.replace(/\n$/, '')}
               </SyntaxHighlighter>
             ) : (
               <code
                 className="bg-slate-100 dark:bg-slate-800 px-1 py-0.5 rounded text-sm font-mono"
                 {...props}
               >
-                {children}
+                {codeContent}
               </code>
             )
           },
@@ -91,12 +132,15 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
           
           // 链接样式
           a({ children, href, ...props }) {
+            const transformedHref = transformLink(href || '')
+            const isExternal = transformedHref.startsWith('http')
+            
             return (
               <a
-                href={href}
+                href={transformedHref}
                 className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
-                target={href?.startsWith('http') ? '_blank' : undefined}
-                rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
                 {...props}
               >
                 {children}
@@ -149,7 +193,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
           // 列表样式
           ul({ children }) {
             return (
-              <ul className="mb-4 space-y-2 text-slate-600 dark:text-slate-400">
+              <ul className="mb-4 space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside">
                 {children}
               </ul>
             )
@@ -165,7 +209,7 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
           
           li({ children }) {
             return (
-              <li className="leading-relaxed">
+              <li className="leading-relaxed ml-4">
                 {children}
               </li>
             )

@@ -21,25 +21,29 @@ export interface DocContent {
 }
 
 // 缓存文档结构，避免重复扫描
-const getDocsStructure = cache(async (): Promise<DocNode[]> => {
-  const docsPath = join(process.cwd(), 'docs')
+const getDocsStructure = cache(async (locale: string = 'zh'): Promise<DocNode[]> => {
+  const docsPath = join(process.cwd(), 'docs', locale)
   
   try {
     const items = await readdir(docsPath)
     const structure: DocNode[] = []
     
-    // 定义文档顺序
-    const docOrder = [
+    // 根据语言定义文档顺序和标题映射
+    const docOrder = locale === 'zh' ? [
       'index',
-      'getting-started', 
-      'concepts',
-      'api',
-      'manager-ui',
-      'deployment',
-      'best-practices',
-      'troubleshooting'
+      '1_快速上手', 
+      '2_系统要求',
+      '3_项目架构设计',
+      '使用指南'
+    ] : [
+      'index',
+      '1_quick-start',
+      '2_system-requirements', 
+      '3_architecture-design',
+      'user-guides'
     ]
     
+    // 扫描主目录文件
     for (const itemName of items) {
       const itemPath = join(docsPath, itemName)
       const itemStat = await stat(itemPath)
@@ -50,15 +54,52 @@ const getDocsStructure = cache(async (): Promise<DocNode[]> => {
         
         // 读取文件内容来提取标题
         const content = await readFile(itemPath, 'utf-8')
-        const title = extractTitleFromContent(content, docId)
-        const description = extractDescriptionFromContent(content)
+        const title = extractTitleFromContent(content, docId, locale)
         
         structure.push({
           id: docId,
           title,
           type: 'file',
-          path: `/docs/${docId}`,
+          path: docId,
           order: order === -1 ? 999 : order
+        })
+      } else if (itemStat.isDirectory()) {
+        // 处理子目录（如"使用指南"或"user-guides"）
+        const subItems = await readdir(itemPath)
+        const subStructure: DocNode[] = []
+        
+        for (const subItemName of subItems) {
+          if (subItemName.endsWith('.md')) {
+            const subItemPath = join(itemPath, subItemName)
+            const subDocId = `${itemName}/${subItemName.replace('.md', '')}`
+            const content = await readFile(subItemPath, 'utf-8')
+            const title = extractTitleFromContent(content, subItemName.replace('.md', ''), locale)
+            
+            subStructure.push({
+              id: subDocId,
+              title,
+              type: 'file',
+              path: subDocId,
+              order: parseInt(subItemName.match(/^\d+/)?.[0] || '999')
+            })
+          }
+        }
+        
+        // 排序子文档
+        subStructure.sort((a, b) => (a.order || 999) - (b.order || 999))
+        
+        // 创建目录节点
+        const folderTitle = locale === 'zh' ? 
+          (itemName === '使用指南' ? '使用指南' : itemName) :
+          (itemName === 'user-guides' ? 'User Guides' : itemName)
+          
+        structure.push({
+          id: itemName,
+          title: folderTitle,
+          type: 'folder',
+          path: '',
+          children: subStructure,
+          order: docOrder.indexOf(itemName) === -1 ? 999 : docOrder.indexOf(itemName)
         })
       }
     }
@@ -66,8 +107,7 @@ const getDocsStructure = cache(async (): Promise<DocNode[]> => {
     // 按照定义的顺序排序
     structure.sort((a, b) => (a.order || 999) - (b.order || 999))
     
-    // 转换为树形结构
-    return buildTreeStructure(structure)
+    return structure
     
   } catch (error) {
     console.error('Error scanning docs directory:', error)
@@ -95,11 +135,39 @@ const getDocContent = cache(async (docId: string): Promise<DocContent | null> =>
   }
 })
 
-// 从文件名生成标题
-function extractTitleFromContent(content: string, fallback: string): string {
-  // 直接使用文件名转换为标题，不再从内容中提取
-  return fallback
-    .split('-')
+// 从文件内容或文件名生成标题
+function extractTitleFromContent(content: string, fallback: string, locale: string = 'zh'): string {
+  // 首先尝试从内容中提取标题（查找第一个 # 标题）
+  const titleMatch = content.match(/^#\s+(.+)$/m)
+  if (titleMatch) {
+    return titleMatch[1].trim()
+  }
+  
+  // 如果没有找到标题，使用预定义的标题映射
+  const titleMap = locale === 'zh' ? {
+    'index': '文档首页',
+    '1_快速上手': '快速上手',
+    '2_系统要求': '系统要求', 
+    '3_项目架构设计': '项目架构设计',
+    '1_HTTP_API_接口文档': 'HTTP API 接口文档',
+    '2_命令行工具参数': '命令行工具参数',
+    '3_HNSW_超参数调整': 'HNSW 超参数调整',
+    '4_gRPC_接口调用': 'gRPC 接口调用',
+    '5_ManagerUI_使用指南': 'Manager UI 使用指南'
+  } : {
+    'index': 'Documentation Home',
+    '1_quick-start': 'Quick Start',
+    '2_system-requirements': 'System Requirements',
+    '3_architecture-design': 'Architecture Design',
+    '1_http-api-reference': 'HTTP API Reference',
+    '2_cli-tool-parameters': 'CLI Tool Parameters', 
+    '3_hnsw-parameter-tuning': 'HNSW Parameter Tuning',
+    '4_grpc-interface-usage': 'gRPC Interface Usage',
+    '5_manager-ui-guide': 'Manager UI Guide'
+  }
+  
+  return titleMap[fallback as keyof typeof titleMap] || fallback
+    .split(/[-_]/)
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
 }
