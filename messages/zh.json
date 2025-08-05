@@ -82,24 +82,15 @@
       "docker_cmd2": "ghcr.io/scintirete/scintirete:latest"
     },
     "download_guide": {
-      "title": "二进制文件下载",
-      "subtitle": "选择适合您操作系统和架构的版本",
+      "title": "安装部署方式",
+      "subtitle": "Scintirete 支持二进制文件直接运行和 Docker 容器部署两种方式",
       "download_btn": "前往 GitHub Releases 下载",
-      "platforms": {
-        "linux": "Linux",
-        "windows": "Windows",
-        "macos": "macOS",
-        "freebsd": "FreeBSD",
-        "openbsd": "OpenBSD"
-      },
-      "architectures": {
-        "amd64": "x86_64",
-        "arm64": "ARM64",
-        "arm": "ARM v7"
-      },
-      "after_download": "下载并启动完成后，您可以访问：",
-      "manager_ui_link": "前往数据库管理UI",
-      "screenshot_placeholder": "管理UI界面预览"
+      "docker_title": "Docker 部署",
+      "binary_title": "二进制部署",
+      "after_startup": "启动完成后，您可以通过以下方式管理数据库：",
+      "manager_ui_link": "数据库管理 UI",
+      "screenshot_placeholder": "管理UI界面预览",
+      "ui_description": "直观的可视化界面，支持数据库创建、集合管理、向量操作等功能"
     },
     "view_docs": "查看完整文档"
   },
@@ -107,12 +98,12 @@
     "title": "准备好开始了吗？",
     "subtitle": "加入我们的开源社区，体验下一代向量数据库的强大功能",
     "view_source": "查看源码",
-    "try_ui": "体验管理UI"
+    "discussions": "加入讨论"
   },
   "docs": {
     "sidebar_title": "文档目录"
   },
   "footer": {
-    "copyright": "© 2024 Scintirete. 开源高性能向量数据库"
+    "copyright": "© 2025 Scintirete. 开源高性能向量数据库 渝ICP备17009771号-1"
   }
 }

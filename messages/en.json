@@ -82,24 +82,15 @@
       "docker_cmd2": "ghcr.io/scintirete/scintirete:latest"
     },
     "download_guide": {
-      "title": "Binary File Download",
-      "subtitle": "Choose the version suitable for your operating system and architecture",
+      "title": "Installation & Deployment",
+      "subtitle": "Scintirete supports both binary deployment and Docker container deployment",
       "download_btn": "Download from GitHub Releases",
-      "platforms": {
-        "linux": "Linux",
-        "windows": "Windows", 
-        "macos": "macOS",
-        "freebsd": "FreeBSD",
-        "openbsd": "OpenBSD"
-      },
-      "architectures": {
-        "amd64": "x86_64",
-        "arm64": "ARM64",
-        "arm": "ARM v7"
-      },
-      "after_download": "After download and startup, you can access:",
-      "manager_ui_link": "Go to Database Manager UI",
-      "screenshot_placeholder": "Manager UI Interface Preview"
+      "docker_title": "Docker Deployment",
+      "binary_title": "Binary Deployment", 
+      "after_startup": "After startup, you can manage the database through:",
+      "manager_ui_link": "Database Manager UI",
+      "screenshot_placeholder": "Manager UI Interface Preview",
+      "ui_description": "Intuitive visual interface supporting database creation, collection management, vector operations, and more"
     },
     "view_docs": "View Complete Documentation"
   },
@@ -107,12 +98,12 @@
     "title": "Ready to get started?",
     "subtitle": "Join our open source community and experience the power of next-generation vector database",
     "view_source": "View Source Code",
-    "try_ui": "Try Manager UI"
+    "discussions": "Join Discussions"
   },
   "docs": {
     "sidebar_title": "Documentation"
   },
   "footer": {
-    "copyright": "© 2024 Scintirete. Open Source High-Performance Vector Database"
+    "copyright": "© 2025 Scintirete. Open Source High-Performance Vector Database 渝ICP备17009771号-1"
   }
 }

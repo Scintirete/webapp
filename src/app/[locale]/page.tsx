@@ -6,7 +6,7 @@ import { getTranslations } from 'next-intl/server'
 import { SmoothScrollLink } from '@/components/smooth-scroll-link'
 import { SparkleBackground } from '@/components/sparkle-background'
 import { SiteNavigation } from '@/components/site-navigation'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 
 export default async function Home() {
   const t = await getTranslations();
@@ -40,12 +40,9 @@ export default async function Home() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Button size="lg" asChild className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                <a href="https://github.com/Scintirete/Scintirete/" target="_blank" rel="noopener noreferrer">
-                  <Github className="w-5 h-5 mr-2" />
-                  {t('hero.start_btn')}
-                </a>
-              </Button>
+              <SmoothScrollLink targetId="quickstart" variant="default" className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white">
+                <span>{t('hero.start_btn')}</span>
+              </SmoothScrollLink>
               <SmoothScrollLink targetId="features" />
             </div>
 
@@ -164,7 +161,7 @@ export default async function Home() {
         </section>
 
         {/* 快速上手区域 */}
-        <section className="py-20 px-4 bg-white dark:bg-slate-900">
+        <section id="quickstart" className="py-20 px-4 bg-white dark:bg-slate-900">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
@@ -215,85 +212,86 @@ export default async function Home() {
               </Card>
             </div>
 
-            {/* 二进制文件下载指南 */}
+            {/* 部署方式指南 */}
             <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-slate-800 dark:to-slate-900 rounded-2xl p-8 mb-8">
               <h3 className="text-2xl font-semibold mb-6 text-center bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent">
                 {t('quickstart.download_guide.title')}
               </h3>
-              <p className="text-center text-slate-600 dark:text-slate-400 mb-6">
+              <p className="text-center text-slate-600 dark:text-slate-400 mb-8">
                 {t('quickstart.download_guide.subtitle')}
               </p>
               
-              <div className="text-center mb-8">
-                <Button size="lg" asChild className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                  <a href="https://github.com/Scintirete/Scintirete/releases" target="_blank" rel="noopener noreferrer">
-                    <Download className="w-5 h-5 mr-2" />
-                    {t('quickstart.download_guide.download_btn')}
-                    <ExternalLink className="w-4 h-4 ml-2" />
-                  </a>
-                </Button>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
-                <div className="bg-white/50 dark:bg-slate-700/50 rounded-xl p-6">
-                  <h4 className="font-semibold mb-4 text-center text-green-600 dark:text-green-400">
-                    {t('quickstart.download_guide.after_download')}
+              <div className="grid md:grid-cols-2 gap-6 mb-8">
+                <div className="bg-white/50 dark:bg-slate-700/50 rounded-xl p-6 text-center">
+                  <h4 className="font-semibold mb-4 text-blue-600 dark:text-blue-400">
+                    {t('quickstart.download_guide.binary_title')}
                   </h4>
-                  <div className="text-center">
-                    <Button asChild variant="outline" size="lg" className="mb-4">
-                      <a href="http://scintirete-manager-ui.cloud.wj2015.com" target="_blank" rel="noopener noreferrer">
-                        <LayoutDashboard className="w-5 h-5 mr-2" />
-                        {t('quickstart.download_guide.manager_ui_link')}
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </a>
-                    </Button>
+                  <div className="bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-xs overflow-x-auto">
+                    <div className="text-green-400 mb-1"># start server</div>
+                    <div>./bin/scintirete-server</div>
                   </div>
+                  <Button size="lg" asChild className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 mt-4">
+                    <a href="https://github.com/Scintirete/Scintirete/releases" target="_blank" rel="noopener noreferrer">
+                      <Download className="w-5 h-5 mr-2" />
+                      {t('quickstart.download_guide.download_btn')}
+                      <ExternalLink className="w-4 h-4 ml-2" />
+                    </a>
+                  </Button>
                 </div>
                 
-                <div className="bg-white/50 dark:bg-slate-700/50 rounded-xl p-6">
-                  <h4 className="font-semibold mb-4 text-center text-blue-600 dark:text-blue-400">
-                    {t('quickstart.download_guide.screenshot_placeholder')}
+                <div className="bg-white/50 dark:bg-slate-700/50 rounded-xl p-6 text-center">
+                  <h4 className="font-semibold mb-4 text-green-600 dark:text-green-400">
+                    {t('quickstart.download_guide.docker_title')}
                   </h4>
-                  <div className="bg-slate-200 dark:bg-slate-600 rounded-lg overflow-hidden">
-                    <img 
-                      src="/manager-ui.png" 
-                      alt="Scintirete Manager UI 界面预览"
-                      className="w-full h-auto object-cover rounded-lg"
-                    />
+                  <div className="bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-xs overflow-x-auto text-left">
+                    <div className="text-green-400 mb-1"># pull latest image</div>
+                    <div className="mb-3">docker pull scintirete/scintirete:latest</div>
+                    
+                    <div className="text-green-400 mb-1"># download config file</div>
+                    <div className="mb-3 whitespace-pre-wrap">wget https://raw.githubusercontent.com/Scintirete/Scintirete/refs/heads/main/configs/scintirete.template.toml
+  -O scintirete.toml</div>
+                    
+                    <div className="text-green-400 mb-1"># start server</div>
+                    <div className="whitespace-pre-wrap">docker run -d \<br />
+  --name scintirete \<br />
+  -p 8080:8080 \<br />
+  -p 9090:9090 \<br />
+  -v $(pwd)/data:/app/data \<br />
+  -v $(pwd)/scintirete.toml:/app/configs/scintirete.toml \<br />
+  scintirete/scintirete:latest</div>
                   </div>
+                </div>
+              </div>
+
+              <div className="bg-white/70 dark:bg-slate-700/70 rounded-xl p-6">
+                <h4 className="font-semibold mb-4 text-center text-purple-600 dark:text-purple-400">
+                  {t('quickstart.download_guide.after_startup')}
+                </h4>
+                
+                <div className="text-center mb-6">
+                  <Button asChild variant="outline" size="lg" className="mb-3">
+                    <a href="http://scintirete-manager-ui.cloud.wj2015.com" target="_blank" rel="noopener noreferrer">
+                      <LayoutDashboard className="w-5 h-5 mr-2" />
+                      {t('quickstart.download_guide.manager_ui_link')}
+                      <ExternalLink className="w-4 h-4 ml-2" />
+                    </a>
+                  </Button>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {t('quickstart.download_guide.ui_description')}
+                  </p>
+                </div>
+                
+                <div className="bg-slate-200 dark:bg-slate-600 rounded-lg overflow-hidden shadow-lg">
+                  <img 
+                    src="/manager-ui.png" 
+                    alt="Scintirete Manager UI 界面预览"
+                    className="w-full h-auto object-cover rounded-lg hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
               </div>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-800 rounded-2xl p-8">
-              <h3 className="text-2xl font-semibold mb-6 text-center">{t('quickstart.examples.title')}</h3>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">{t('quickstart.examples.binary_title')}</h4>
-                  <div className="bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-sm">
-                    <div className="text-green-400">{t('quickstart.examples.binary_comment')}</div>
-                    <div>{t('quickstart.examples.binary_cmd')}</div>
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-3 text-blue-600 dark:text-blue-400">{t('quickstart.examples.docker_title')}</h4>
-                  <div className="bg-slate-900 text-slate-100 rounded-lg p-4 font-mono text-sm">
-                    <div className="text-green-400">{t('quickstart.examples.docker_comment')}</div>
-                    <div>{t('quickstart.examples.docker_cmd1')}</div>
-                    <div>{t('quickstart.examples.docker_cmd2')}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div className="mt-12 text-center">
-              <Button size="lg" asChild className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                <Link href="/docs">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  {t('quickstart.view_docs')}
-                </Link>
-              </Button>
-            </div>
           </div>
         </section>
 
@@ -308,15 +306,15 @@ export default async function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600">
-                <a href="https://github.com/Scintirete/Scintirete/" target="_blank" rel="noopener noreferrer">
-                  <Github className="w-5 h-5 mr-2" />
-                  {t('cta.view_source')}
-                </a>
+                <Link href="/docs">
+                  <BookOpen className="w-5 h-5 mr-2" />
+                  {t('quickstart.view_docs')}
+                </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="http://scintirete-manager-ui.cloud.wj2015.com" target="_blank" rel="noopener noreferrer">
-                  <LayoutDashboard className="w-5 h-5 mr-2" />
-                  {t('cta.try_ui')}
+              <Button size="lg" variant="secondary" asChild>
+                <a href="https://github.com/Scintirete/Scintirete/discussions" target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="w-5 h-5 mr-2" />
+                  {t('cta.discussions')}
                 </a>
               </Button>
             </div>

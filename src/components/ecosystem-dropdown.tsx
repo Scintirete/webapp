@@ -16,12 +16,12 @@ export function EcosystemDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="flex items-center space-x-1 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors">
+        <Button variant="ghost" className="flex items-center space-x-1 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer">
           <span>{t('ecosystem')}</span>
           <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
+      <DropdownMenuContent align="end" className="w-56" sideOffset={5}>
         <DropdownMenuItem asChild>
           <a 
             href="http://scintirete-manager-ui.cloud.wj2015.com" 

@@ -8,9 +8,10 @@ interface SmoothScrollLinkProps {
   targetId: string;
   children?: React.ReactNode;
   className?: string;
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 }
 
-export function SmoothScrollLink({ targetId, children, className }: SmoothScrollLinkProps) {
+export function SmoothScrollLink({ targetId, children, className, variant = 'outline' }: SmoothScrollLinkProps) {
   const t = useTranslations('hero');
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -27,9 +28,9 @@ export function SmoothScrollLink({ targetId, children, className }: SmoothScroll
   return (
     <Button 
       size="lg" 
-      variant="outline" 
+      variant={variant} 
       onClick={handleClick}
-      className={className}
+      className={`cursor-pointer ${className || ''}`}
     >
       {children || (
         <>

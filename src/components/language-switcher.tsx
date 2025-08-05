@@ -34,19 +34,19 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+        <Button variant="ghost" size="sm" className="flex items-center space-x-2 cursor-pointer">
           {/* <Globe className="w-4 h-4" /> */}
           <span className="hidden md:inline">{currentLanguage.flag} {currentLanguage.name}</span>
           <span className="md:hidden">{currentLanguage.flag}</span>
           <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" sideOffset={5}>
         {languages.map((language) => (
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            className={`flex items-center space-x-2 ${
+            className={`flex items-center space-x-2 cursor-pointer ${
               locale === language.code ? 'bg-accent' : ''
             }`}
           >
