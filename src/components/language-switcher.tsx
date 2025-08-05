@@ -22,19 +22,16 @@ export function LanguageSwitcher() {
   const locale = useLocale();
 
   const handleLanguageChange = (newLocale: string) => {
-    // For 'as-needed' localePrefix: default locale (en) has no prefix, others do
-    const currentPath = pathname.replace(`/${locale}`, '') || '/';
-    let newPath: string;
-    
-    if (newLocale === 'en') {
-      // English is default, no prefix needed
-      newPath = currentPath === '/' ? '/' : currentPath;
-    } else {
-      // Other locales need prefix
-      newPath = `/${newLocale}${currentPath === '/' ? '' : currentPath}`;
-    }
-    
+    const newPath = `${newLocale === 'en' ? '/' : "/" + newLocale}`;
+    console.log("switching to", newLocale, newPath);
     router.push(newPath);
+    // // For 'as-needed' localePrefix: default locale (en) has no prefix, others do
+    // const currentPath = pathname.replace(`/${locale}`, '') || '/';
+    // const newPath = `/${newLocale}${currentPath}`;
+
+    // console.log("switching", locale, newLocale, currentPath, newPath);
+    
+    // router.push(newPath);
   };
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0];

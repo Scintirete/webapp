@@ -1,12 +1,16 @@
 import {getRequestConfig} from 'next-intl/server';
-import zh from '../../messages/zh.json';
-import en from '../../messages/en.json';
+import {hasLocale} from 'next-intl';
+import {routing} from './routing';
  
-export default getRequestConfig(async ({locale}) => {
-  const validLocale = locale || 'en';
-  
+export default getRequestConfig(async ({requestLocale}) => {
+  // Typically corresponds to the `[locale]` segment
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
+ 
   return {
-    locale: validLocale,
-    messages: validLocale === 'zh' ? zh : en
+    locale,
+    messages: (await import(`../../messages/${locale}.json`)).default
   };
 });
