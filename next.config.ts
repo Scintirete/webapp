@@ -12,6 +12,7 @@ const nextConfig = {
       },
     },
   },
+  output: 'standalone', // 为 Docker 优化输出
 };
 
 export default withNextIntl(nextConfig);
