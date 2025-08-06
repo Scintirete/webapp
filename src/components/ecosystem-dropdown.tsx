@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, LayoutDashboard, ExternalLink } from 'lucide-react';
+import { ChevronDown, Database, LayoutDashboard, ExternalLink } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 export function EcosystemDropdown() {
@@ -21,13 +21,25 @@ export function EcosystemDropdown() {
           <ChevronDown className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56" sideOffset={5}>
+      <DropdownMenuContent align="end" className="w-64" sideOffset={5}>
         <DropdownMenuItem asChild>
           <a 
-            href="http://scintirete-manager-ui.cloud.wj2015.com" 
+            href="https://github.com/Scintirete/Scintirete/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center space-x-2 w-full"
+            className="flex items-center space-x-2 w-full cursor-pointer"
+          >
+            <Database className="w-4 h-4" />
+            <span>{t('vector_database')}</span>
+            <ExternalLink className="w-3 h-3 ml-auto" />
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <a 
+            href="https://github.com/Scintirete/manager-ui" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center space-x-2 w-full cursor-pointer"
           >
             <LayoutDashboard className="w-4 h-4" />
             <span>{t('manager_ui')}</span>

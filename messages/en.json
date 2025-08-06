@@ -2,7 +2,8 @@
   "nav": {
     "docs": "Docs",
     "ecosystem": "Open Ecosystem",
-    "manager_ui": "Database Manager UI",
+    "vector_database": "Vector Database Scintirete",
+    "manager_ui": "Database Management Tool",
     "github": "Star on GitHub"
   },
   "hero": {

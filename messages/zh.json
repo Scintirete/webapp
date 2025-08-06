@@ -2,7 +2,8 @@
   "nav": {
     "docs": "文档",
     "ecosystem": "开源生态",
-    "manager_ui": "数据库管理UI",
+    "vector_database": "向量数据库 Scintirete",
+    "manager_ui": "数据库管理工具 DMS",
     "github": "Star on GitHub"
   },
   "hero": {

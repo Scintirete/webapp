@@ -123,6 +123,11 @@
   html {
     overflow-y: scroll;
   }
+  /* 修复 Radix UI 下拉菜单导致的页面左移问题 */
+  body[data-scroll-locked] {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 @keyframes sparkle {
