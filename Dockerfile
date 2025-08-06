@@ -25,23 +25,14 @@ RUN pnpm run build
 # 生产阶段
 FROM node:20-alpine AS production
 
-# 安装 tsx (用于运行 TypeScript)
-RUN npm install -g tsx
-
 # 设置工作目录
 WORKDIR /app
 
 # 从构建阶段复制 standalone 输出
-COPY --from=builder /app/.next/standalone ./
+# 文档：cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/
+COPY --from=builder /app/.next/standalone/ .
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
-
-# 复制自定义服务器文件和必要配置
-COPY --from=builder /app/server.ts ./server.ts
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-COPY --from=builder /app/next.config.ts ./next.config.ts
-COPY --from=builder /app/src ./src
-COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/public/ ./public
 
 # 设置环境变量
 ENV NODE_ENV=production
@@ -52,4 +43,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # 启动应用
-CMD ["tsx", "server.ts"]
+CMD ["node", "server.js"]
