@@ -16,7 +16,7 @@ env:
 jobs:
   # Docker 镜像构建和推送
   docker:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
