@@ -13,7 +13,7 @@
 │                    Network Layer                            │
 ├─────────────────────────────────────────────────────────────┤
 │    HTTP Gateway    │         gRPC Server                    │
-│  (gRPC-Gateway)    │    (scintirete.proto)                  │
+│  (gRPC-Gateway)    │    (scintirete.proto)                 │
 └─────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────┐
@@ -45,7 +45,7 @@
 
 ## 2. Directory Structure Planning
 
-```text
+```
 scintirete/
 ├── cmd/                          # Command-line tool entry points
 │   ├── scintirete-server/        # Server startup tool
