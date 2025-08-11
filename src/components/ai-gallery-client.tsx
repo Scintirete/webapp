@@ -325,11 +325,6 @@ export function AIGalleryClient() {
                                 '--progress-width': `${result.similarity * 100}%`,
                                 width: 'var(--progress-width)'
                               } as React.CSSProperties}
-                              role="progressbar"
-                              aria-label={t('demos.ai_gallery.similarity_progress', { similarity: Math.round(result.similarity * 100) })}
-                              aria-valuenow={Math.round(result.similarity * 100)}
-                              aria-valuemin={0}
-                              aria-valuemax={100}
                             />
                           </div>
                           <span className="text-sm font-medium text-slate-800 dark:text-slate-200">
