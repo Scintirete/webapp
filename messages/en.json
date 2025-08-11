@@ -1,6 +1,7 @@
 {
   "nav": {
     "docs": "Docs",
+    "demos": "Demo Center",
     "ecosystem": "Open Ecosystem",
     "vector_database": "Vector Database Scintirete",
     "manager_ui": "Database Management Tool",
@@ -103,6 +104,46 @@
   },
   "docs": {
     "sidebar_title": "Documentation"
+  },
+  "demos": {
+    "badge": "Interactive Demos",
+    "title": "Demo Center",
+    "subtitle": "Experience the powerful capabilities of Scintirete vector database through hands-on interaction and explore various real-world application scenarios",
+    "more_coming": "More exciting demos coming soon...",
+    "ai_gallery": {
+      "badge": "AI Powered",
+      "title": "AI Gallery Search",
+      "description": "Deep learning-based image similarity search demo. Upload your images and experience millisecond-level semantic search to discover visually similar content.",
+      "preview_title": "Intelligent Image Search",
+      "preview_subtitle": "Drag & Drop • Real-time Search • Similar Recommendations",
+      "try_button": "Try Now",
+      "back_to_demos": "Back to Demo Center",
+      "page_description": "Upload images or choose examples to experience millisecond-level image similarity search powered by Scintirete vector database",
+      "search_placeholder": "Describe the image you're looking for, or drag & drop/paste images here...",
+      "upload_hint": "Support drag & drop, paste images, or click the button on the right to select files",
+      "examples_title": "Example Images",
+      "random_button": "Random",
+      "search_button": "Start Search",
+      "searching": "Searching...",
+      "new_search": "New Search",
+      "results_title": "Similar Image Results",
+      "results_count": "Found {count} similar images",
+      "similarity": "Similarity",
+      "upload_button_title": "Select files to upload",
+      "example_image_title": "Example image {index}",
+      "similarity_progress": "Similarity {similarity}%",
+      "file_input_title": "Select image files",
+      "file_input_label": "Image file selector",
+      "remove_image": "Remove image",
+      "features": {
+        "upload": "Smart Upload",
+        "upload_desc": "Support drag & drop and paste upload with automatic image feature extraction",
+        "vector_search": "Vector Search",
+        "vector_search_desc": "Millisecond-level similar image retrieval based on HNSW algorithm",
+        "realtime": "Real-time Response",
+        "realtime_desc": "Smooth user experience with instant search results display"
+      }
+    }
   },
   "footer": {
     "copyright": "© 2025 Scintirete. Open Source High-Performance Vector Database 渝ICP备17009771号-1"

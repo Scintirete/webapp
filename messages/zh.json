@@ -1,6 +1,7 @@
 {
   "nav": {
     "docs": "文档",
+    "demos": "演示中心",
     "ecosystem": "开源生态",
     "vector_database": "向量数据库 Scintirete",
     "manager_ui": "数据库管理工具 DMS",
@@ -103,6 +104,46 @@
   },
   "docs": {
     "sidebar_title": "文档目录"
+  },
+  "demos": {
+    "badge": "互动演示",
+    "title": "演示中心",
+    "subtitle": "通过实际操作体验 Scintirete 向量数据库的强大功能，探索各种真实应用场景",
+    "more_coming": "更多精彩演示即将推出...",
+    "ai_gallery": {
+      "badge": "AI 驱动",
+      "title": "AI 相册检索",
+      "description": "基于深度学习的图像相似性搜索演示。上传您的图片，体验毫秒级的语义搜索，发现视觉上相似的内容。",
+      "preview_title": "智能图像搜索",
+      "preview_subtitle": "拖拽上传 • 实时搜索 • 相似推荐",
+      "try_button": "开始试用",
+      "back_to_demos": "返回演示中心",
+      "page_description": "上传图片或选择示例，体验基于 Scintirete 向量数据库的毫秒级图像相似性搜索",
+      "search_placeholder": "描述您要查找的图像，或直接拖拽/粘贴图片到此处...",
+      "upload_hint": "支持拖拽上传、粘贴图片，或点击右侧按钮选择文件",
+      "examples_title": "示例图片",
+      "random_button": "随机",
+      "search_button": "开始搜索",
+      "searching": "搜索中...",
+      "new_search": "重新搜索",
+      "results_title": "相似图片结果",
+      "results_count": "找到 {count} 张相似图片",
+      "similarity": "相似度",
+      "upload_button_title": "选择文件上传",
+      "example_image_title": "示例图片 {index}",
+      "similarity_progress": "相似度 {similarity}%",
+      "file_input_title": "选择图片文件",
+      "file_input_label": "图片文件选择器",
+      "remove_image": "移除图片",
+      "features": {
+        "upload": "智能上传",
+        "upload_desc": "支持拖拽上传和粘贴，自动提取图像特征",
+        "vector_search": "向量搜索",
+        "vector_search_desc": "基于 HNSW 算法的毫秒级相似图像检索",
+        "realtime": "实时响应",
+        "realtime_desc": "流畅的用户体验，即时展示搜索结果"
+      }
+    }
   },
   "footer": {
     "copyright": "© 2025 Scintirete. 开源高性能向量数据库 渝ICP备17009771号-1"

@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Github, BookOpen, FileText } from 'lucide-react'
+import { Github, BookOpen, FileText, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { EcosystemDropdown } from '@/components/ecosystem-dropdown'
@@ -42,6 +42,13 @@ export async function SiteNavigation({ showDocsIndicator = false }: SiteNavigati
           </div>
           
           <div className="hidden md:flex items-center space-x-6 text-sm">
+            <Link 
+              href="/demos" 
+              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>{t('nav.demos')}</span>
+            </Link>
             <Link 
               href="/docs" 
               className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
