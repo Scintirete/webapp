@@ -292,7 +292,7 @@ export function AIGalleryClient() {
                           className="pr-12 py-6 text-lg bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-purple-400 dark:hover:border-purple-500 focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
                         />
                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                          <Upload className="w-5 h-5 text-slate-400" />
+                          {/* <Upload className="w-5 h-5 text-slate-400" /> */}
                           <input
                             ref={fileInputRef}
                             type="file"
