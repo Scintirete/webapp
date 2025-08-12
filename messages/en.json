@@ -135,6 +135,11 @@
       "file_input_title": "Select image files",
       "file_input_label": "Image file selector",
       "remove_image": "Remove image",
+      "uploaded_images": "Uploaded Images",
+      "shuffling": "Shuffling...",
+      "search_timing": "Total time {total}ms (Image processing {processing}ms, Vectorization {vectorization}ms, Database search {database}ms)",
+      "loading_more": "Loading more results...",
+      "no_more_results": "All results with similarity > 30% have been displayed",
       "features": {
         "upload": "Smart Upload",
         "upload_desc": "Support drag & drop and paste upload with automatic image feature extraction",
