@@ -44,10 +44,15 @@ export async function SiteNavigation({ showDocsIndicator = false }: SiteNavigati
           <div className="hidden md:flex items-center space-x-6 text-sm">
             <Link 
               href="/demos" 
-              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+              className="group flex items-center space-x-2 text-slate-600 hover:text-purple-600 dark:text-slate-300 dark:hover:text-purple-400 transition-all duration-300 relative"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>{t('nav.demos')}</span>
+              <Sparkles className="w-4 h-4 group-hover:animate-pulse group-hover:text-yellow-400 transition-all duration-300" />
+              <span className="relative">
+                {t('nav.demos')}
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-500 to-yellow-400 bg-clip-text text-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {t('nav.demos')}
+                </span>
+              </span>
             </Link>
             <Link 
               href="/docs" 
