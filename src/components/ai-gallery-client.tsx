@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { AnimatedImageBackground } from '@/components/animated-image-background'
 import { Upload, X, Search, Shuffle, Loader2, Image as ImageIcon, Clock } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import { useToast } from '@/hooks/use-toast'
+import { AI_GALLERY_CONFIG, validateFile, validateFileCount, ERROR_KEYS } from '@/lib/ai-gallery-config'
 
 interface UploadedImage {
   id: string
@@ -42,6 +44,7 @@ const SEARCH_RESULTS = [
 
 export function AIGalleryClient() {
   const t = useTranslations()
+  const { toast } = useToast()
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearching, setIsSearching] = useState(false)
@@ -100,21 +103,47 @@ export function AIGalleryClient() {
   }, [hasSearched, hasMoreResults, isLoadingMore, page])
 
   const handleFileUpload = useCallback((files: FileList) => {
+    // 检查文件数量限制
+    const fileCountValidation = validateFileCount(uploadedImages.length, files.length);
+    if (!fileCountValidation.valid) {
+      toast({
+        variant: "destructive",
+        title: t("demos.ai_gallery.error_upload_failed"),
+        description: t(fileCountValidation.errorKey!, fileCountValidation.errorParams),
+      });
+      return;
+    }
+    
     Array.from(files).forEach(file => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader()
-        reader.onload = (e) => {
-          const newImage: UploadedImage = {
-            id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-            src: e.target?.result as string,
-            file
-          }
-          setUploadedImages(prev => [...prev, newImage])
-        }
-        reader.readAsDataURL(file)
+      // 验证文件
+      const fileValidation = validateFile(file);
+      if (!fileValidation.valid) {
+        toast({
+          variant: "destructive",
+          title: t("demos.ai_gallery.error_upload_failed"),
+          description: t(fileValidation.errorKey!, fileValidation.errorParams),
+        });
+        return;
       }
+      
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const newImage: UploadedImage = {
+          id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+          src: e.target?.result as string,
+          file
+        }
+        setUploadedImages(prev => {
+          // 再次检查数量限制，防止并发添加
+          if (prev.length >= AI_GALLERY_CONFIG.MAX_FILES) {
+            return prev;
+          }
+          return [...prev, newImage];
+        })
+      }
+      reader.readAsDataURL(file)
     })
-  }, [])
+  }, [uploadedImages.length, t, toast])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -126,24 +155,22 @@ export function AIGalleryClient() {
   const handlePaste = useCallback((e: React.ClipboardEvent) => {
     const items = e.clipboardData?.items
     if (items) {
+      const files: File[] = []
       Array.from(items).forEach(item => {
         if (item.type.startsWith('image/')) {
           const file = item.getAsFile()
           if (file) {
-            handleFileUpload(new DataTransfer().files)
-            const reader = new FileReader()
-            reader.onload = (e) => {
-              const newImage: UploadedImage = {
-                id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
-                src: e.target?.result as string,
-                file
-              }
-              setUploadedImages(prev => [...prev, newImage])
-            }
-            reader.readAsDataURL(file)
+            files.push(file)
           }
         }
       })
+      
+      if (files.length > 0) {
+        // 创建一个 FileList 对象来使用 handleFileUpload
+        const dataTransfer = new DataTransfer()
+        files.forEach(file => dataTransfer.items.add(file))
+        handleFileUpload(dataTransfer.files)
+      }
     }
   }, [handleFileUpload])
 
@@ -152,6 +179,16 @@ export function AIGalleryClient() {
   }
 
   const handleExampleClick = async (src: string) => {
+    // 检查文件数量限制
+    if (uploadedImages.length >= AI_GALLERY_CONFIG.MAX_FILES) {
+      toast({
+        variant: "destructive",
+        title: t("demos.ai_gallery.error_upload_failed"),
+        description: t(ERROR_KEYS.TOO_MANY_FILES, { max: AI_GALLERY_CONFIG.MAX_FILES }),
+      });
+      return;
+    }
+    
     // 检查是否已经存在相同的图片
     const isDuplicate = uploadedImages.some(img => img.src === src)
     if (isDuplicate) return
@@ -160,6 +197,21 @@ export function AIGalleryClient() {
       // 获取图片并转换为File对象
       const response = await fetch(src)
       const blob = await response.blob()
+      
+      // 检查文件大小
+      if (blob.size > AI_GALLERY_CONFIG.MAX_FILE_SIZE_BYTES) {
+        toast({
+          variant: "destructive",
+          title: t("demos.ai_gallery.error_upload_failed"),
+          description: t(ERROR_KEYS.FILE_TOO_LARGE, { 
+            filename: `example-${Date.now()}.jpg`, 
+            size: Math.round(blob.size / 1024), 
+            max: AI_GALLERY_CONFIG.MAX_FILE_SIZE_KB 
+          }),
+        });
+        return;
+      }
+      
       const file = new File([blob], `example-${Date.now()}.jpg`, { type: blob.type })
       
       const newImage: UploadedImage = {
@@ -171,6 +223,11 @@ export function AIGalleryClient() {
       setUploadedImages(prev => [...prev, newImage])
     } catch (error) {
       console.error('Failed to load example image:', error)
+      toast({
+        variant: "destructive",
+        title: t("demos.ai_gallery.error_upload_failed"),
+        description: t(ERROR_KEYS.LOAD_EXAMPLE_FAILED),
+      });
     }
   }
 
@@ -194,34 +251,61 @@ export function AIGalleryClient() {
     setHasMoreResults(true)
 
     const startTime = Date.now()
-    let currentTime = startTime
     
-    // 模拟图片处理时间
-    await new Promise(resolve => setTimeout(resolve, 800))
-    const imageProcessingTime = Date.now() - currentTime
-    currentTime = Date.now()
-    
-    // 模拟向量化时间
-    await new Promise(resolve => setTimeout(resolve, 600))
-    const vectorizationTime = Date.now() - currentTime
-    currentTime = Date.now()
-    
-    // 模拟数据库搜索时间
-    await new Promise(resolve => setTimeout(resolve, 400))
-    const databaseSearchTime = Date.now() - currentTime
-    
-    const totalTime = Date.now() - startTime
-    
-    setSearchTiming({
-      imageProcessing: imageProcessingTime,
-      vectorization: vectorizationTime,
-      databaseSearch: databaseSearchTime,
-      total: totalTime
-    })
-    
-    setSearchResults(SEARCH_RESULTS)
-    setIsSearching(false)
-    setHasSearched(true)
+    try {
+      // 准备表单数据
+      const formData = new FormData()
+      
+      // 添加搜索查询
+      if (searchQuery) {
+        formData.append('query', searchQuery)
+      }
+      
+      // 添加上传的图片文件
+      uploadedImages.forEach((img, index) => {
+        formData.append(`images`, img.file)
+      })
+      
+      // 调用后端 API
+      const response = await fetch('/api/ai-gallery/search', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      if (!response.ok) {
+        throw new Error(`搜索失败: ${response.status} ${response.statusText}`)
+      }
+      
+      const result = await response.json()
+      
+      const totalTime = Date.now() - startTime
+      
+      setSearchTiming({
+        imageProcessing: result.timing?.imageProcessing || 0,
+        vectorization: result.timing?.vectorization || 0,
+        databaseSearch: result.timing?.databaseSearch || 0,
+        total: totalTime
+      })
+      
+      setSearchResults(result.results || [])
+      setHasMoreResults(result.hasMore || false)
+      setIsSearching(false)
+      setHasSearched(true)
+      
+    } catch (error) {
+      console.error('搜索出错:', error)
+      
+      // 显示错误提示
+      toast({
+        variant: "destructive",
+        title: t(ERROR_KEYS.SEARCH_FAILED),
+        description: error instanceof Error ? error.message : String(error),
+      });
+      
+      // 重置搜索状态，但保持在当前页面
+      setIsSearching(false)
+      // 不设置 hasSearched 为 true，保持在搜索界面
+    }
   }
 
   return (

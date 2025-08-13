@@ -140,6 +140,12 @@
       "search_timing": "Total time {total}ms (Image processing {processing}ms, Vectorization {vectorization}ms, Database search {database}ms)",
       "loading_more": "Loading more results...",
       "no_more_results": "All results with similarity > 30% have been displayed",
+      "error_too_many_files": "Maximum {max} images allowed",
+      "error_invalid_file_type": "Only image files are supported",
+      "error_file_too_large": "File {filename} is too large({size}KB), please select images smaller than {max}KB",
+      "error_load_example": "Failed to load example image",
+      "error_search_failed": "Search failed",
+      "error_upload_failed": "Upload failed",
       "features": {
         "upload": "Smart Upload",
         "upload_desc": "Support drag & drop and paste upload with automatic image feature extraction",

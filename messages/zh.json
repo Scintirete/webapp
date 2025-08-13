@@ -140,6 +140,12 @@
       "search_timing": "总耗时 {total}ms（图片处理 {processing}ms，向量化 {vectorization}ms，数据库搜索 {database}ms）",
       "loading_more": "加载更多结果中...",
       "no_more_results": "已显示所有相似度大于 30% 的结果",
+      "error_too_many_files": "最多只能上传 {max} 张图片",
+      "error_invalid_file_type": "只支持图片文件格式",
+      "error_file_too_large": "文件 {filename} 过大({size}KB)，请选择小于 {max}KB 的图片",
+      "error_load_example": "加载示例图片失败",
+      "error_search_failed": "搜索失败",
+      "error_upload_failed": "上传失败",
       "features": {
         "upload": "智能上传",
         "upload_desc": "支持拖拽上传和粘贴，自动提取图像特征",
