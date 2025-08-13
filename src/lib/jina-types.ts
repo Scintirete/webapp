@@ -6,6 +6,7 @@
 export type JinaEmbeddingModel = 
   | 'jina-clip-v2'              // 多模态、多语言、1024维、8K上下文窗口、865M参数
   | 'jina-embeddings-v3'        // 文本模型、多语言、1024维、8K上下文窗口、570M参数
+  | 'jina-embeddings-v4'        // 文本模型、多语言、1024维、8K上下文窗口、380M参数
   | 'jina-colbert-v2'           // 多语言ColBERT模型，8K token上下文，560M参数
   | 'jina-embeddings-v2-base-code'; // 针对代码和文档搜索优化，768维，8K上下文窗口，137M参数
 

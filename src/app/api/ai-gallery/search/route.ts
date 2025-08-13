@@ -62,10 +62,8 @@ export async function POST(request: NextRequest) {
       // 转换为 base64
       const buffer = await file.arrayBuffer()
       const base64 = Buffer.from(buffer).toString('base64')
-      const mimeType = file.type
-      const dataUrl = `data:${mimeType};base64,${base64}`
       
-      processedImages.push(dataUrl)
+      processedImages.push(base64)
     }
     
     const imageProcessingTime = Date.now() - imageProcessingStart
@@ -74,15 +72,15 @@ export async function POST(request: NextRequest) {
     // 准备向量化输入
     const embeddingInputs: MultimodalInput[] = []
     
-    // 添加文本查询
-    if (query) {
-      embeddingInputs.push({ text: query })
-    }
-    
     // 添加图片
     processedImages.forEach(imageData => {
       embeddingInputs.push({ image: imageData })
     })
+
+    // 添加文本查询
+    if (query) {
+      embeddingInputs.push({ text: query })
+    }
     
     // 调用 Jina embedding API
     const jinaClient = getJinaClient()

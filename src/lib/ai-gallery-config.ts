@@ -28,7 +28,7 @@ export const SEARCH_CONFIG = {
   // 向量维度
   VECTOR_DIMENSIONS: 1024,
   // Jina 模型名称
-  JINA_MODEL: 'jina-embeddings-v3' as const,
+  JINA_MODEL: 'jina-embeddings-v4' as const,
 } as const;
 
 // 错误消息键
