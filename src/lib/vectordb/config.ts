@@ -1,18 +1,8 @@
 /**
- * Scintirete SDK 配置类型定义
+ * Scintirete 向量数据库配置管理
  */
-export interface ScintireteConfig {
-  /** 向量数据库地址 */
-  address: string;
-  /** 向量数据库密码 */
-  password?: string;
-  /** 是否启用 TLS 连接 */
-  useTLS: boolean;
-  /** 连接超时时间（毫秒） */
-  timeout?: number;
-  /** 数据库名称 */
-  databaseName?: string;
-}
+
+import { ScintireteConfig } from './types';
 
 /**
  * 从环境变量获取 Scintirete 配置

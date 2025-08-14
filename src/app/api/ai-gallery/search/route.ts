@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getJinaClient } from '@/lib/jina-client'
-import { EmbeddingRequest, MultimodalInput } from '@/lib/jina-types'
+import { DoubaoEmbeddingResponse, getDoubaoEmbeddingClient } from '@/lib/embedding'
+import { DoubaoEmbeddingRequest, DoubaoMultimodalInput } from '@/lib/embedding'
 import { AI_GALLERY_CONFIG, SEARCH_CONFIG, validateFile, validateFileCount } from '@/lib/ai-gallery-config'
 
 interface SearchResult {
@@ -11,7 +11,6 @@ interface SearchResult {
 
 interface SearchResponse {
   results: SearchResult[]
-  hasMore: boolean
   timing: {
     imageProcessing: number
     vectorization: number
@@ -70,34 +69,40 @@ export async function POST(request: NextRequest) {
     const vectorizationStart = Date.now()
     
     // 准备向量化输入
-    const embeddingInputs: MultimodalInput[] = []
+    const embeddingInputs: DoubaoMultimodalInput[] = []
     
-    // 添加图片
+    // 添加图片（转换为data URI格式）
     processedImages.forEach(imageData => {
-      embeddingInputs.push({ image: imageData })
+      embeddingInputs.push({ 
+        type: 'image_url',
+        image_url: {
+          url: `data:image/jpeg;base64,${imageData}`
+        }
+      })
     })
 
     // 添加文本查询
     if (query) {
-      embeddingInputs.push({ text: query })
+      embeddingInputs.push({ 
+        type: 'text',
+        text: query 
+      })
     }
     
-    // 调用 Jina embedding API
-    const jinaClient = getJinaClient()
+    // 调用 Doubao embedding API
+    const doubaoClient = getDoubaoEmbeddingClient()
     
-    const embeddingRequest: EmbeddingRequest = {
-      model: SEARCH_CONFIG.JINA_MODEL,
-      input: embeddingInputs,
-      embedding_format: 'float',
-      dimensions: SEARCH_CONFIG.VECTOR_DIMENSIONS
+    const embeddingRequest: DoubaoEmbeddingRequest = {
+      model: SEARCH_CONFIG.DOUBAO_MODEL,
+      input: embeddingInputs
     }
     
-    let embedding_response
+    let embedding_response: DoubaoEmbeddingResponse
     try {
-      embedding_response = await jinaClient.embedding(embeddingRequest)
+      embedding_response = await doubaoClient.embedding(embeddingRequest)
     } catch (error) {
-      console.error('Jina API 调用失败:', error)
-      // TODO: 如果 Jina API 失败，可以考虑使用本地模型或返回错误
+      console.error('Doubao API 调用失败:', error)
+      // TODO: 如果 Doubao API 失败，可以考虑使用其他模型或返回错误
       throw new Error('向量化服务暂时不可用')
     }
     
@@ -107,8 +112,9 @@ export async function POST(request: NextRequest) {
     // TODO: 这里应该使用 Scintirete 进行向量搜索
     // 目前返回示例数据用于演示
     console.log('TODO: 实现 Scintirete 向量搜索')
-    console.log('嵌入向量维度:', embedding_response.data.length)
-    console.log('查询嵌入向量:', embedding_response.data[0]?.embedding?.slice(0, 5), '...')
+    console.log('嵌入向量维度:', embedding_response.data.embedding.length)
+    console.log('查询嵌入向量:', embedding_response.data.embedding.slice(0, 5), '...')
+    console.log("消耗 token:", embedding_response.usage.total_tokens, "prompt_tokens:", embedding_response.usage.prompt_tokens, "prompt_tokens_details:", embedding_response.usage.prompt_tokens_details)
     
     // 示例搜索结果（实际应该从 Scintirete 获取）
     const mockResults: SearchResult[] = [
@@ -125,7 +131,6 @@ export async function POST(request: NextRequest) {
     // 构建响应
     const response: SearchResponse = {
       results: mockResults,
-      hasMore: true, // TODO: 根据实际搜索结果确定
       timing: {
         imageProcessing: imageProcessingTime,
         vectorization: vectorizationTime,

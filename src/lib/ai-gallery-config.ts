@@ -25,10 +25,10 @@ export const SEARCH_CONFIG = {
   DEFAULT_PAGE_SIZE: 6,
   // 最小相似度阈值
   MIN_SIMILARITY_THRESHOLD: 0.3,
-  // 向量维度
+  // 向量维度（Doubao embedding 模型的输出维度）
   VECTOR_DIMENSIONS: 1024,
-  // Jina 模型名称
-  JINA_MODEL: 'jina-embeddings-v4' as const,
+  // Doubao 模型名称
+  DOUBAO_MODEL: 'doubao-embedding-vision-250615' as const,
 } as const;
 
 // 错误消息键

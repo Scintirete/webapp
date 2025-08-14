@@ -7,8 +7,11 @@
 ```
 src/
 ├── lib/
-│   ├── scintirete-config.ts    # 配置管理
-│   └── scintirete-client.ts    # 客户端封装
+│   └── vectordb/               # 向量数据库模块
+│       ├── config.ts           # 配置管理
+│       ├── client.ts           # 客户端封装
+│       ├── types.ts            # 类型定义
+│       └── index.ts            # 模块入口
 ├── types/
 │   └── scintirete.ts          # 类型定义
 ├── app/api/scintirete/
@@ -63,7 +66,7 @@ SCINTIRETE_DATABASE_NAME=prod_database
 ### 1. 基础用法
 
 ```typescript
-import { getScintireteClient } from '@/lib/scintirete-client';
+import { getScintireteClient } from '@/lib/vectordb';
 
 // 获取客户端实例
 const client = getScintireteClient();
@@ -76,7 +79,7 @@ console.log('数据库列表:', databases.names);
 ### 2. 健康检查
 
 ```typescript
-import { healthCheckScintireteClient } from '@/lib/scintirete-client';
+import { healthCheckScintireteClient } from '@/lib/vectordb';
 
 const health = await healthCheckScintireteClient();
 if (health.success) {
@@ -89,7 +92,7 @@ if (health.success) {
 ### 3. 数据库操作
 
 ```typescript
-import { getScintireteClient } from '@/lib/scintirete-client';
+import { getScintireteClient } from '@/lib/vectordb';
 
 const client = getScintireteClient();
 
@@ -107,7 +110,7 @@ const dropResult = await client.dropDatabase({
 ### 4. 集合操作
 
 ```typescript
-import { getScintireteClient } from '@/lib/scintirete-client';
+import { getScintireteClient } from '@/lib/vectordb';
 import { DistanceMetric } from '@/types/scintirete';
 
 const client = getScintireteClient();
@@ -133,7 +136,7 @@ const info = await client.getCollectionInfo({
 ### 5. 文本嵌入和搜索
 
 ```typescript
-import { getScintireteClient } from '@/lib/scintirete-client';
+import { getScintireteClient } from '@/lib/vectordb';
 
 const client = getScintireteClient();
 
@@ -200,7 +203,7 @@ import {
   closeScintireteClient,
   isScintireteClientInitialized,
   getScintireteClientConfig,
-} from '@/lib/scintirete-client';
+} from '@/lib/vectordb';
 
 // 检查客户端是否已初始化
 if (!isScintireteClientInitialized()) {

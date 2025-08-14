@@ -1,5 +1,10 @@
+/**
+ * Scintirete 向量数据库客户端封装
+ */
+
 import { createScintireteClient, Scintirete, type ScintireteClientOptions } from 'scintirete';
-import { getScintireteConfig, validateScintireteConfig, type ScintireteConfig } from './scintirete-config';
+import { getScintireteConfig, validateScintireteConfig } from './config';
+import { ScintireteConfig } from './types';
 
 /**
  * Scintirete 客户端实例管理器
