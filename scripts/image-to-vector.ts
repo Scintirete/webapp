@@ -7,6 +7,11 @@
  * 使用方法：
  *   npx tsx scripts/image-to-vector.ts <directory>
  * 
+ * 特性：
+ *   - 支持断点续跑：自动跳过已生成向量文件的图片
+ *   - 智能过滤：在处理前就排除已处理文件，提高效率
+ *   - 详细统计：显示总文件数、跳过数量、处理结果等
+ * 
  * 输出格式：
  *   - 在输入目录下创建 vector/ 子目录
  *   - 为每个图片生成对应的 {name}.json 文件
@@ -103,6 +108,31 @@ async function getJpgFiles(directory: string): Promise<string[]> {
 }
 
 /**
+ * 过滤掉已经生成向量文件的图片，支持断点续跑
+ */
+async function filterUnprocessedFiles(jpgFiles: string[], vectorDir: string): Promise<{ unprocessed: string[], skipped: string[] }> {
+  const unprocessed: string[] = [];
+  const skipped: string[] = [];
+  
+  for (const imagePath of jpgFiles) {
+    const imageName = path.basename(imagePath);
+    const nameWithoutExt = path.parse(imageName).name;
+    const vectorPath = path.join(vectorDir, `${nameWithoutExt}.json`);
+    
+    try {
+      // 检查对应的JSON文件是否存在
+      await fs.access(vectorPath);
+      skipped.push(imagePath);
+    } catch {
+      // JSON文件不存在，需要处理
+      unprocessed.push(imagePath);
+    }
+  }
+  
+  return { unprocessed, skipped };
+}
+
+/**
  * 确保向量输出目录存在
  */
 async function ensureVectorDirectory(directory: string): Promise<string> {
@@ -124,15 +154,6 @@ async function processImage(imagePath: string, vectorDir: string): Promise<boole
     const imageName = path.basename(imagePath);
     const nameWithoutExt = path.parse(imageName).name;
     const outputPath = path.join(vectorDir, `${nameWithoutExt}.json`);
-    
-    // 检查是否已经处理过
-    try {
-      await fs.access(outputPath);
-      console.log(`⏭️  跳过已处理的图片: ${imageName}`);
-      return true;
-    } catch {
-      // 文件不存在，继续处理
-    }
     
     // 转换图片为向量
     const vector = await imageToVector(imagePath);
@@ -193,27 +214,42 @@ async function main(): Promise<void> {
     
     // 扫描 JPG 文件
     logger.info('扫描 JPG 文件...');
-    const jpgFiles = await getJpgFiles(inputDirectory);
+    const allJpgFiles = await getJpgFiles(inputDirectory);
     
-    if (jpgFiles.length === 0) {
+    if (allJpgFiles.length === 0) {
       logger.info('未找到 JPG 文件');
       return;
     }
     
-    logger.info(`找到 ${jpgFiles.length} 个 JPG 文件`);
+    logger.info(`找到 ${allJpgFiles.length} 个 JPG 文件`);
     
     // 确保向量目录存在
     const vectorDir = await ensureVectorDirectory(inputDirectory);
     
-    // 处理图片文件
+    // 过滤已处理的文件，支持断点续跑
+    logger.info('检查已处理的文件...');
+    const { unprocessed, skipped } = await filterUnprocessedFiles(allJpgFiles, vectorDir);
+    
+    if (skipped.length > 0) {
+      logger.info(`跳过 ${skipped.length} 个已处理的文件`);
+    }
+    
+    if (unprocessed.length === 0) {
+      logger.success('所有文件都已处理完成！');
+      return;
+    }
+    
+    logger.info(`需要处理 ${unprocessed.length} 个文件（跳过 ${skipped.length} 个已处理文件）`);
+    
+    // 处理未处理的图片文件
     let successCount = 0;
     let failCount = 0;
     
     logger.info('开始批量处理图片...');
     
-    for (let i = 0; i < jpgFiles.length; i++) {
-      const imagePath = jpgFiles[i];
-      logger.progress(i + 1, jpgFiles.length, `处理: ${path.basename(imagePath)}`);
+    for (let i = 0; i < unprocessed.length; i++) {
+      const imagePath = unprocessed[i];
+      logger.progress(i + 1, unprocessed.length, `处理: ${path.basename(imagePath)}`);
       
       const success = await processImage(imagePath, vectorDir);
       if (success) {
@@ -222,18 +258,22 @@ async function main(): Promise<void> {
         failCount++;
       }
       
-      // 添加小延迟避免 API 限流
-      if (i < jpgFiles.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      }
+      // // 添加小延迟避免 API 限流
+      // if (i < unprocessed.length - 1) {
+      //   await new Promise(resolve => setTimeout(resolve, 100));
+      // }
     }
     
     // 输出统计信息
     const duration = Date.now() - startTime;
     console.log('\n📊 处理完成统计:');
-    logger.success(`成功: ${successCount} 个`);
+    logger.info(`总文件: ${allJpgFiles.length} 个`);
+    if (skipped.length > 0) {
+      logger.info(`跳过已处理: ${skipped.length} 个`);
+    }
+    logger.success(`本次处理成功: ${successCount} 个`);
     if (failCount > 0) {
-      logger.error(`失败: ${failCount} 个`);
+      logger.error(`本次处理失败: ${failCount} 个`);
     }
     logger.info(`向量文件保存至: ${vectorDir}`);
     logger.info(`总耗时: ${formatDuration(duration)}`);
