@@ -131,8 +131,8 @@ async function readVectorFile(filePath: string): Promise<VectorData> {
  */
 async function checkDatabaseExists(client: any, databaseName: string): Promise<boolean> {
   try {
-    const databases = await client.listDatabases();
-    return databases.some((db: any) => db.name === databaseName);
+    const response = await client.listDatabases();
+    return response.names.includes(databaseName);
   } catch (error) {
     console.error('检查数据库存在性失败:', error);
     return false;
@@ -144,8 +144,8 @@ async function checkDatabaseExists(client: any, databaseName: string): Promise<b
  */
 async function checkCollectionExists(client: any, databaseName: string, collectionName: string): Promise<boolean> {
   try {
-    const collections = await client.listCollections(databaseName);
-    return collections.some((col: any) => col.name === collectionName);
+    const response = await client.listCollections({ dbName: databaseName });
+    return response.collections.some((col: any) => col.name === collectionName);
   } catch (error) {
     console.error('检查集合存在性失败:', error);
     return false;
@@ -169,19 +169,21 @@ async function createDatabase(client: any, databaseName: string): Promise<void> 
  */
 async function createCollection(client: any, databaseName: string, collectionName: string, vectorDimension: number): Promise<void> {
   try {
+    // 导入 DistanceMetric 枚举
+    const { DistanceMetric } = await import('scintirete');
+    
     // 创建集合配置
     const config = {
-      name: collectionName,
-      dimension: vectorDimension,
-      metricType: 'COSINE', // 使用余弦相似度
-      indexType: 'HNSW',
-      indexParams: {
-        M: 16,
+      dbName: databaseName,
+      collectionName: collectionName,
+      metricType: DistanceMetric.COSINE, // 使用余弦相似度
+      hnswConfig: {
+        m: 16,
         efConstruction: 200
       }
     };
     
-    await client.createCollection(databaseName, config);
+    await client.createCollection(config);
     console.log(`✅ 集合创建成功: ${databaseName}.${collectionName} (维度: ${vectorDimension})`);
   } catch (error) {
     throw new Error(`创建集合失败: ${error instanceof Error ? error.message : String(error)}`);
@@ -193,7 +195,7 @@ async function createCollection(client: any, databaseName: string, collectionNam
  */
 async function deleteCollection(client: any, databaseName: string, collectionName: string): Promise<void> {
   try {
-    await client.deleteCollection(databaseName, collectionName);
+    await client.dropCollection({ dbName: databaseName, collectionName: collectionName });
     console.log(`🗑️  集合删除成功: ${databaseName}.${collectionName}`);
   } catch (error) {
     throw new Error(`删除集合失败: ${error instanceof Error ? error.message : String(error)}`);
@@ -212,16 +214,19 @@ async function insertVectorsBatch(
 ): Promise<number> {
   try {
     // 准备插入数据
-    const insertData = vectors.map((data, index) => ({
-      id: startIndex + index,
-      vector: data.vector,
+    const insertData = vectors.map((data) => ({
+      elements: data.vector,
       metadata: {
         img_name: data.img_name,
         created_at: new Date().toISOString()
       }
     }));
     
-    await client.insert(databaseName, collectionName, insertData);
+    await client.insertVectors({
+      dbName: databaseName,
+      collectionName: collectionName,
+      vectors: insertData
+    });
     console.log(`✅ 批量插入成功: ${vectors.length} 个向量`);
     return vectors.length;
   } catch (error) {
@@ -240,13 +245,9 @@ async function checkVectorExists(
   imgName: string
 ): Promise<boolean> {
   try {
-    // 使用元数据查询检查是否存在
-    const results = await client.search(databaseName, collectionName, {
-      vector: new Array(512).fill(0), // 占位向量
-      topK: 1,
-      filter: { img_name: imgName }
-    });
-    return results.length > 0;
+    // 由于 Scintirete 当前不支持基于元数据的直接查询，
+    // 这里简单返回 false，让用户手动处理重复项
+    return false;
   } catch {
     return false;
   }

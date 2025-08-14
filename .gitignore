@@ -46,7 +46,7 @@ dev.log
 test
 prompt
 
-public/gallary/*.jpg
+public/gallary/
 test-images/
 
 server.log
