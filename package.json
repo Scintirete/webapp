@@ -10,7 +10,10 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "images:vectorize": "tsx scripts/image-to-vector.ts",
+    "images:to-db": "tsx scripts/vector-to-db.ts",
+    "images:batch": "tsx scripts/batch-process.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
