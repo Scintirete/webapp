@@ -213,6 +213,7 @@ async function insertVectorsBatch(
   startIndex: number
 ): Promise<number> {
   try {
+    const startTime = Date.now();
     // 准备插入数据
     const insertData = vectors.map((data) => ({
       elements: data.vector,
@@ -227,7 +228,8 @@ async function insertVectorsBatch(
       collectionName: collectionName,
       vectors: insertData
     });
-    console.log(`✅ 批量插入成功: ${vectors.length} 个向量`);
+    const duration = Date.now() - startTime;
+    console.log(`✅ 批量插入成功: ${vectors.length} 个向量, 耗时: ${formatDuration(duration)}`);
     return vectors.length;
   } catch (error) {
     console.error(`❌ 批量插入失败: ${error instanceof Error ? error.message : String(error)}`);
