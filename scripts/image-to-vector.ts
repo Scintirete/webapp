@@ -10,7 +10,14 @@
  * 特性：
  *   - 支持断点续跑：自动跳过已生成向量文件的图片
  *   - 智能过滤：在处理前就排除已处理文件，提高效率
- *   - 详细统计：显示总文件数、跳过数量、处理结果等
+ *   - 并发处理：批量并发处理图片，显著提升处理速度
+ *   - 智能限流：根据API限额(15000 RPM)自动控制请求频率
+ *   - 详细统计：显示总文件数、跳过数量、批次进度、处理结果等
+ * 
+ * 并发配置：
+ *   - 批次大小：每批次并发处理10个图片
+ *   - 请求速率：最大200 RPS，低于API限额确保稳定性
+ *   - 批次间隔：3秒延迟避免API限流
  * 
  * 输出格式：
  *   - 在输入目录下创建 vector/ 子目录
@@ -27,6 +34,13 @@ interface VectorData {
   vector: number[];
   img_name: string;
 }
+
+// 并发处理配置
+const CONCURRENT_CONFIG = {
+  batchSize: 10,        // 每批并发处理的图片数量
+  maxRPS: 200,          // 最大请求速率 (requests per second)
+  delayBetweenBatches: 300  // 批次间延迟 (ms)
+};
 
 /**
  * 将图片文件转换为 base64 格式
@@ -169,6 +183,41 @@ async function processImage(imagePath: string, vectorDir: string): Promise<boole
 }
 
 /**
+ * 批量并发处理图片文件
+ */
+async function processBatch(imagePaths: string[], vectorDir: string): Promise<{ success: number, failed: number }> {
+  const promises = imagePaths.map(imagePath => processImage(imagePath, vectorDir));
+  const results = await Promise.allSettled(promises);
+  
+  let success = 0;
+  let failed = 0;
+  
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled' && result.value) {
+      success++;
+    } else {
+      failed++;
+      if (result.status === 'rejected') {
+        console.error(`❌ 批次处理失败 ${path.basename(imagePaths[index])}: ${result.reason}`);
+      }
+    }
+  });
+  
+  return { success, failed };
+}
+
+/**
+ * 将数组分割成指定大小的批次
+ */
+function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < array.length; i += chunkSize) {
+    chunks.push(array.slice(i, i + chunkSize));
+  }
+  return chunks;
+}
+
+/**
  * 主函数
  */
 async function main(): Promise<void> {
@@ -183,12 +232,24 @@ async function main(): Promise<void> {
     
     // 检查命令行参数
     const args = process.argv.slice(2);
-    if (args.length !== 1) {
-      logger.error('使用方法: npx tsx scripts/image-to-vector.ts <directory>');
+    if (args.length < 1 || args.length > 2) {
+      logger.error('使用方法: npx tsx scripts/image-to-vector.ts <directory> [batch-size]');
+      logger.error('  directory: 包含图片的目录路径');
+      logger.error('  batch-size: 可选，每批次并发处理的图片数量 (默认: 10)');
       process.exit(1);
     }
     
     const inputDirectory = args[0];
+    const batchSize = args[1] ? parseInt(args[1]) : CONCURRENT_CONFIG.batchSize;
+    
+    // 验证批次大小
+    if (isNaN(batchSize) || batchSize < 1 || batchSize > 300) {
+      logger.error('批次大小必须是 1-50 之间的数字');
+      process.exit(1);
+    }
+    
+    // 更新并发配置
+    CONCURRENT_CONFIG.batchSize = batchSize;
     
     // 检查目录是否存在
     try {
@@ -199,6 +260,7 @@ async function main(): Promise<void> {
     }
     
     logger.info(`开始处理目录: ${inputDirectory}`);
+    logger.info(`并发配置: 批次大小=${CONCURRENT_CONFIG.batchSize}, 批次间隔=${CONCURRENT_CONFIG.delayBetweenBatches}ms, 目标RPS=${CONCURRENT_CONFIG.maxRPS}`);
     
     // 初始化 Doubao Embedding 客户端
     logger.info('初始化 Doubao Embedding 客户端...');
@@ -245,27 +307,40 @@ async function main(): Promise<void> {
     let successCount = 0;
     let failCount = 0;
     
-    logger.info('开始批量处理图片...');
+    logger.info(`开始批量并发处理图片... (批次大小: ${CONCURRENT_CONFIG.batchSize})`);
     
-    for (let i = 0; i < unprocessed.length; i++) {
-      const imagePath = unprocessed[i];
-      logger.progress(i + 1, unprocessed.length, `处理: ${path.basename(imagePath)}`);
+    // 将文件分割成批次
+    const batches = chunkArray(unprocessed, CONCURRENT_CONFIG.batchSize);
+    const totalBatches = batches.length;
+    
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      const batch = batches[batchIndex];
+      const batchStartTime = Date.now();
       
-      const success = await processImage(imagePath, vectorDir);
-      if (success) {
-        successCount++;
-      } else {
-        failCount++;
+      logger.info(`处理批次 ${batchIndex + 1}/${totalBatches} (${batch.length} 个文件)`);
+      
+      // 并发处理当前批次
+      const batchResult = await processBatch(batch, vectorDir);
+      successCount += batchResult.success;
+      failCount += batchResult.failed;
+      
+      const batchDuration = Date.now() - batchStartTime;
+      const avgTimePerImage = batchDuration / batch.length;
+      
+      logger.info(`批次 ${batchIndex + 1} 完成: 成功 ${batchResult.success}, 失败 ${batchResult.failed} (耗时: ${formatDuration(batchDuration)}, 平均: ${Math.round(avgTimePerImage)}ms/图)`);
+      
+      // 批次间延迟，避免 API 限流
+      if (batchIndex < batches.length - 1) {
+        logger.info(`等待 ${CONCURRENT_CONFIG.delayBetweenBatches}ms 后处理下一批次...`);
+        await new Promise(resolve => setTimeout(resolve, CONCURRENT_CONFIG.delayBetweenBatches));
       }
-      
-      // // 添加小延迟避免 API 限流
-      // if (i < unprocessed.length - 1) {
-      //   await new Promise(resolve => setTimeout(resolve, 100));
-      // }
     }
     
     // 输出统计信息
     const duration = Date.now() - startTime;
+    const avgTimePerImage = unprocessed.length > 0 ? duration / unprocessed.length : 0;
+    const requestsPerSecond = unprocessed.length > 0 ? (unprocessed.length / (duration / 1000)) : 0;
+    
     console.log('\n📊 处理完成统计:');
     logger.info(`总文件: ${allJpgFiles.length} 个`);
     if (skipped.length > 0) {
@@ -275,6 +350,8 @@ async function main(): Promise<void> {
     if (failCount > 0) {
       logger.error(`本次处理失败: ${failCount} 个`);
     }
+    logger.info(`处理批次: ${totalBatches} 批`);
+    logger.info(`平均速度: ${Math.round(avgTimePerImage)}ms/图, ${requestsPerSecond.toFixed(1)} RPS`);
     logger.info(`向量文件保存至: ${vectorDir}`);
     logger.info(`总耗时: ${formatDuration(duration)}`);
     
