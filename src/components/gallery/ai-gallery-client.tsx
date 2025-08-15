@@ -4,11 +4,11 @@ import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { AnimatedImageBackground } from '@/components/animated-image-background'
+import { AnimatedImageBackground } from './animated-image-background'
 import { ArrowLeft, ExternalLink, Eye, Database } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
-import { AI_GALLERY_CONFIG, validateFile, ERROR_KEYS } from '@/lib/ai-gallery-config'
+import { AI_GALLERY_CONFIG, validateFile, ERROR_KEYS } from '@/lib/gallery/config'
 import { 
   GallerySearchForm, 
   GallerySearchResults, 
@@ -154,7 +154,7 @@ export function AIGalleryClient() {
               />
 
               {/* 数据集信息 */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border border-green-200/50 dark:border-green-800/50">
+              {/* <div className="mb-6 p-4 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border border-green-200/50 dark:border-green-800/50">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Database className="w-4 h-4 text-green-600" />
@@ -174,7 +174,7 @@ export function AIGalleryClient() {
                     </a>
                   </Button>
                 </div>
-              </div>
+              </div> */}
 
               {/* 向量空间可视化简介 */}
               <div className="p-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/50">

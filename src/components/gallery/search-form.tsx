@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Upload, X, Search, Loader2, Image as ImageIcon, Shuffle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
-import { AI_GALLERY_CONFIG, validateFile, validateFileCount, ERROR_KEYS } from '@/lib/ai-gallery-config'
+import { AI_GALLERY_CONFIG, validateFile, validateFileCount, ERROR_KEYS } from '@/lib/gallery/config'
 
 interface UploadedImage {
   id: string

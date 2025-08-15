@@ -14,11 +14,11 @@ export type {
 // 导出配置管理
 export {
   getGalleryConfig,
-  GALLERY_CONFIG
+  GALLERY_CONFIG,
+  buildImageUrl,
+  AI_GALLERY_CONFIG,
+  SEARCH_CONFIG,
+  ERROR_KEYS,
+  validateFile,
+  validateFileCount
 } from './config';
-
-// 导出搜索服务
-export {
-  GallerySearchService,
-  createGallerySearchService
-} from './search-service';

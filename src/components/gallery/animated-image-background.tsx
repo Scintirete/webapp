@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { GallaryImageList } from '@/data'
+import { buildImageUrl } from '@/lib/gallery'
 
 interface ImageItem {
   id: number
@@ -17,7 +18,7 @@ interface ImageItem {
 // 从真实图片数据中随机选择
 const getRandomImages = (count: number = 20) => {
   const shuffled = [...GallaryImageList].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, count).map(item => `/gallary/${item.img_name}`)
+  return shuffled.slice(0, count).map(item => buildImageUrl(item.img_name))
 }
 
 export function AnimatedImageBackground() {

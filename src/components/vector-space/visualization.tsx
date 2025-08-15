@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 import { VectorPoint, ClusterPoint, ViewTransform } from './types'
 import { ScaleLinear } from 'd3-scale'
+import { buildImageUrl } from '@/lib/gallery/config'
 
 interface VectorSpaceVisualizationProps {
   dimensions: { width: number; height: number }
@@ -196,7 +197,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                       y={cy - imageSize / 2 - 20 / transform.k + 2 / transform.k}
                       width={imageSize - 4 / transform.k}
                       height={imageSize - 4 / transform.k}
-                      href={`/gallary/${'img_name' in point ? point.img_name : ''}`}
+                      href={buildImageUrl('img_name' in point ? point.img_name : '')}
                       className="cursor-pointer"
                       onClick={(e) => onPointClick(point, e)}
                       onError={(e) => {

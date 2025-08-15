@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { DoubaoEmbeddingResponse, getDoubaoEmbeddingClient } from '@/lib/embedding'
 import { DoubaoEmbeddingRequest, DoubaoMultimodalInput } from '@/lib/embedding'
-import { AI_GALLERY_CONFIG, SEARCH_CONFIG, validateFile, validateFileCount } from '@/lib/ai-gallery-config'
-import { createGallerySearchService } from '@/lib/gallery'
+import { AI_GALLERY_CONFIG, SEARCH_CONFIG, validateFile, validateFileCount } from '@/lib/gallery'
+import { createGallerySearchService } from '@/lib/gallery/search-service'
 import type { GallerySearchResponse } from '@/lib/gallery'
 
 export async function POST(request: NextRequest) {

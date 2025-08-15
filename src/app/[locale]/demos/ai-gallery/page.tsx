@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { SiteNavigation } from '@/components/site-navigation'
-import { AIGalleryClient } from '@/components/ai-gallery-client'
+import { AIGalleryClient } from '@/components/gallery'
 import { ArrowLeft } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'

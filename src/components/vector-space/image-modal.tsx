@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations } from 'next-intl'
+import { buildImageUrl } from '@/lib/gallery/config'
 
 interface ImageModalProps {
   selectedImage: string | null
@@ -41,7 +42,7 @@ export function ImageModal({ selectedImage, onClose }: ImageModalProps) {
             {/* 图片内容 */}
             <div className="relative">
               <img
-                src={`/gallary/${selectedImage}`}
+                src={buildImageUrl(selectedImage)}
                 alt={selectedImage}
                 className="w-full h-auto max-h-[80vh] object-contain"
                 onError={(e) => {

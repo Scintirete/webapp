@@ -6,18 +6,18 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Shuffle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
-import { AI_GALLERY_CONFIG, ERROR_KEYS } from '@/lib/ai-gallery-config'
+import { AI_GALLERY_CONFIG, ERROR_KEYS, buildImageUrl } from '@/lib/gallery/config'
 import { GallaryImageList } from '@/data'
 
 // 从真实图片数据中随机选择示例图片
 const getRandomExampleImages = (count: number = 6) => {
   const shuffled = [...GallaryImageList].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, count).map(item => `/gallary/${item.img_name}`)
+  return shuffled.slice(0, count).map(item => buildImageUrl(item.img_name))
 }
 
 // 获取固定的初始示例图片（避免水合问题）
 const getInitialExampleImages = (count: number = 6) => {
-  return GallaryImageList.slice(0, count).map(item => `/gallary/${item.img_name}`)
+  return GallaryImageList.slice(0, count).map(item => buildImageUrl(item.img_name))
 }
 
 interface ExampleImagesProps {
