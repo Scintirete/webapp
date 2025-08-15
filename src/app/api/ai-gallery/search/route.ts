@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     
     const searchResult = await gallerySearchService.search({
       queryVector: embedding_response.data.embedding,
-      limit: 300,  // 召回300条
+      limit: 50,  // 召回50条
       minSimilarity: 30, // 匹配度>30的结果
     })
     
@@ -121,8 +121,7 @@ export async function POST(request: NextRequest) {
         vectorization: vectorizationTime,
         databaseSearch: databaseSearchTime,
         total: totalTime
-      },
-      hasMore: false // 前端分页，所以一次性返回所有符合条件的结果
+      }
     }
     
     return NextResponse.json(response)

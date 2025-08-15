@@ -14,7 +14,7 @@ export interface GalleryImageMetadata {
 export interface GallerySearchOptions {
   /** 搜索向量 */
   queryVector: number[];
-  /** 返回结果数量，默认300 */
+  /** 返回结果数量，默认50，不能超过初始化向量数据库的数量 */
   limit?: number;
   /** 最小匹配度阈值，默认30 */
   minSimilarity?: number;
@@ -40,7 +40,6 @@ export interface GallerySearchResponse {
     databaseSearch: number;
     total: number;
   };
-  hasMore: boolean;
 }
 
 export interface GalleryConfig {

@@ -4,7 +4,8 @@ import { useState, useRef, useCallback, useImperativeHandle, forwardRef, useEffe
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Upload, X, Search, Loader2, Image as ImageIcon } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Upload, X, Search, Loader2, Image as ImageIcon, Shuffle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
 import { AI_GALLERY_CONFIG, validateFile, validateFileCount, ERROR_KEYS } from '@/lib/ai-gallery-config'
@@ -30,12 +31,62 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
   const { toast } = useToast()
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [placeholderText, setPlaceholderText] = useState('')
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(true)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // 使用useEffect来避免在render过程中调用setState
   useEffect(() => {
     onImageCountChange?.(uploadedImages.length)
   }, [uploadedImages.length, onImageCountChange])
+
+  // 初始化随机占位符和候选建议
+  useEffect(() => {
+    const allSuggestions = t.raw('demos.ai_gallery.search_suggestions') as string[]
+    if (allSuggestions && Array.isArray(allSuggestions)) {
+      // 随机选择一个作为占位符
+      const randomIndex = Math.floor(Math.random() * allSuggestions.length)
+      const randomSuggestion = allSuggestions[randomIndex]
+      const trySearchText = t('demos.ai_gallery.try_searching')
+      const orText = t('demos.ai_gallery.or')
+      setPlaceholderText(`${trySearchText} "${randomSuggestion}" ${orText} ${t('demos.ai_gallery.search_placeholder')}`)
+      
+      // 随机选择6个作为候选建议（排除已选中的占位符）
+      const shuffled = [...allSuggestions].sort(() => Math.random() - 0.5)
+      const selectedSuggestions = shuffled.slice(0, 6)
+      setSuggestions(selectedSuggestions)
+    } else {
+      setPlaceholderText(t('demos.ai_gallery.search_placeholder'))
+      setSuggestions([])
+    }
+  }, [t])
+
+  // 随机刷新候选建议
+  const refreshSuggestions = () => {
+    const allSuggestions = t.raw('demos.ai_gallery.search_suggestions') as string[]
+    if (allSuggestions && Array.isArray(allSuggestions)) {
+      const shuffled = [...allSuggestions].sort(() => Math.random() - 0.5)
+      const selectedSuggestions = shuffled.slice(0, 6)
+      setSuggestions(selectedSuggestions)
+    }
+  }
+
+  // 选择建议
+  const selectSuggestion = (suggestion: string) => {
+    setSearchQuery(suggestion)
+    setShowSuggestions(false)
+  }
+
+  // 当用户开始输入时隐藏建议
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+    if (e.target.value.length > 0) {
+      setShowSuggestions(false)
+    } else {
+      setShowSuggestions(true)
+    }
+  }
 
   const handleFileUpload = useCallback((files: FileList) => {
     // 检查文件数量限制
@@ -179,6 +230,7 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
   const clearForm = () => {
     setSearchQuery('')
     setUploadedImages([])
+    setShowSuggestions(true)
   }
 
   // 使用 useImperativeHandle 暴露方法
@@ -223,11 +275,11 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
             <div className="relative">
               <Input
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleInputChange}
                 onPaste={handlePaste}
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}
-                placeholder={t('demos.ai_gallery.search_placeholder')}
+                placeholder={placeholderText}
                 className="pr-12 py-6 text-lg bg-white/50 dark:bg-slate-700/50 backdrop-blur-sm border-2 border-dashed border-slate-300 dark:border-slate-600 hover:border-purple-400 dark:hover:border-purple-500 focus:border-purple-500 dark:focus:border-purple-400 transition-colors"
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
@@ -252,6 +304,38 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
                 </Button>
               </div>
             </div>
+
+            {/* 候选建议 */}
+            {showSuggestions && suggestions.length > 0 && searchQuery.length === 0 && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    {t('demos.ai_gallery.search_suggestions_title')}
+                  </h4>
+                  <Button
+                    variant="ghost" 
+                    size="sm"
+                    onClick={refreshSuggestions}
+                    className="text-slate-500 hover:text-purple-600 h-auto p-1"
+                    title={t('demos.ai_gallery.refresh_suggestions')}
+                  >
+                    <Shuffle className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((suggestion, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="cursor-pointer hover:bg-purple-100 hover:text-purple-700 dark:hover:bg-purple-900 dark:hover:text-purple-300 transition-colors px-3 py-1"
+                      onClick={() => selectSuggestion(suggestion)}
+                    >
+                      {suggestion}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
             
             {/* 搜索按钮和提示 */}
             <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -265,7 +349,7 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
                   size="lg"
                   className="px-6 py-3"
                 >
-                  清空
+                  {t('demos.ai_gallery.clear_button')}
                 </Button>
                 <Button
                   onClick={handleSubmit}

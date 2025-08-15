@@ -426,7 +426,7 @@ async function main(): Promise<void> {
       
       // 添加小延迟避免数据库压力
       if (i + options.batchSize < vectorFiles.length) {
-        await sleep(500);
+        await sleep(200);
       }
     }
     
