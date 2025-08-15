@@ -8,7 +8,6 @@ export type {
   DoubaoEmbeddingModel,
   DoubaoMultimodalInput,
   DoubaoEmbeddingRequest,
-  DoubaoEmbeddingData,
   DoubaoEmbeddingResponse,
   DoubaoClientConfig,
   DoubaoError,

@@ -2,21 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { DoubaoEmbeddingResponse, getDoubaoEmbeddingClient } from '@/lib/embedding'
 import { DoubaoEmbeddingRequest, DoubaoMultimodalInput } from '@/lib/embedding'
 import { AI_GALLERY_CONFIG, SEARCH_CONFIG, validateFile, validateFileCount } from '@/lib/ai-gallery-config'
-
-interface SearchResult {
-  id: number
-  src: string
-  similarity: number
-}
-
-interface SearchResponse {
-  results: SearchResult[]
-  timing: {
-    imageProcessing: number
-    vectorization: number
-    databaseSearch: number
-  }
-}
+import { createGallerySearchService } from '@/lib/gallery'
+import type { GallerySearchResponse } from '@/lib/gallery'
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
@@ -109,33 +96,33 @@ export async function POST(request: NextRequest) {
     const vectorizationTime = Date.now() - vectorizationStart
     const databaseSearchStart = Date.now()
     
-    // TODO: 这里应该使用 Scintirete 进行向量搜索
-    // 目前返回示例数据用于演示
-    console.log('TODO: 实现 Scintirete 向量搜索')
-    console.log('嵌入向量维度:', embedding_response.data.embedding.length)
-    console.log('查询嵌入向量:', embedding_response.data.embedding.slice(0, 5), '...')
-    console.log("消耗 token:", embedding_response.usage.total_tokens, "prompt_tokens:", embedding_response.usage.prompt_tokens, "prompt_tokens_details:", embedding_response.usage.prompt_tokens_details)
+    console.log('📊 向量化完成 - 维度:', embedding_response.data.embedding.length)
+    console.log('🔍 查询向量预览:', embedding_response.data.embedding.slice(0, 5), '...')
+    console.log("📈 消耗 token:", embedding_response.usage.total_tokens, "prompt_tokens:", embedding_response.usage.prompt_tokens)
     
-    // 示例搜索结果（实际应该从 Scintirete 获取）
-    const mockResults: SearchResult[] = [
-      { id: 1, src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=300&fit=crop', similarity: 0.98 },
-      { id: 2, src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=300&h=300&fit=crop', similarity: 0.94 },
-      { id: 3, src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=300&h=300&fit=crop', similarity: 0.91 },
-      { id: 4, src: 'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=300&h=300&fit=crop', similarity: 0.88 },
-      { id: 5, src: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=300&h=300&fit=crop', similarity: 0.85 },
-      { id: 6, src: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=300&h=300&fit=crop', similarity: 0.82 }
-    ]
+    // 使用相册搜索服务进行向量搜索
+    const gallerySearchService = createGallerySearchService()
+    
+    const searchResult = await gallerySearchService.search({
+      queryVector: embedding_response.data.embedding,
+      limit: 300,  // 召回300条
+      minSimilarity: 30, // 匹配度>30的结果
+    })
     
     const databaseSearchTime = Date.now() - databaseSearchStart
+    const totalTime = Date.now() - startTime
     
     // 构建响应
-    const response: SearchResponse = {
-      results: mockResults,
+    const response: GallerySearchResponse = {
+      results: searchResult.results,
+      total: searchResult.total,
       timing: {
         imageProcessing: imageProcessingTime,
         vectorization: vectorizationTime,
-        databaseSearch: databaseSearchTime
-      }
+        databaseSearch: databaseSearchTime,
+        total: totalTime
+      },
+      hasMore: false // 前端分页，所以一次性返回所有符合条件的结果
     }
     
     return NextResponse.json(response)

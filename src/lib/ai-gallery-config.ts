@@ -29,6 +29,20 @@ export const SEARCH_CONFIG = {
   VECTOR_DIMENSIONS: 1024,
   // Doubao 模型名称
   DOUBAO_MODEL: 'doubao-embedding-vision-250615' as const,
+  // 默认召回数量
+  DEFAULT_RECALL_LIMIT: 300,
+  // 匹配度阈值
+  SIMILARITY_THRESHOLD: 30,
+} as const;
+
+// 相册配置
+export const GALLERY_CONFIG = {
+  // 相册公共URL，用于图片访问
+  PUBLIC_URL: process.env.GALLARY_PUBLIC_URL || '/gallary/',
+  // 默认数据库
+  DEFAULT_DATABASE: 'webapp',
+  // 默认集合
+  DEFAULT_COLLECTION: 'gallary',
 } as const;
 
 // 错误消息键
