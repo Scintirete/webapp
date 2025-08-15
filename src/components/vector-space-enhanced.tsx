@@ -33,6 +33,7 @@ export function VectorSpaceEnhanced() {
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null)
   
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  const [isClient, setIsClient] = useState(false)
   const [transform, setTransform] = useState<ViewTransform>({ x: 0, y: 0, k: 1 })
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null)
@@ -75,12 +76,27 @@ export function VectorSpaceEnhanced() {
         const width = Math.max(800, rect.width - 32)
         const height = Math.max(600, window.innerHeight * 0.7)
         setDimensions({ width, height })
+      } else {
+        // 如果 containerRef 为空，使用默认尺寸
+        const width = Math.max(800, window.innerWidth - 64)
+        const height = Math.max(600, window.innerHeight * 0.7)
+        setDimensions({ width, height })
       }
     }
 
-    updateDimensions()
+    // 延迟初始化，确保 DOM 已经渲染
+    const timer = setTimeout(updateDimensions, 100)
     window.addEventListener('resize', updateDimensions)
-    return () => window.removeEventListener('resize', updateDimensions)
+    
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', updateDimensions)
+    }
+  }, [])
+
+  // 客户端检测
+  useEffect(() => {
+    setIsClient(true)
   }, [])
 
   // 初始化 D3 缩放
@@ -158,7 +174,7 @@ export function VectorSpaceEnhanced() {
     return Math.max(2, Math.min(12, radius))
   }, [transform.k])
 
-  if (dimensions.width === 0) {
+  if (!isClient || dimensions.width === 0) {
     return (
       <Card className="w-full">
         <CardContent className="flex items-center justify-center h-96">
@@ -169,7 +185,7 @@ export function VectorSpaceEnhanced() {
               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
             />
             <p className="text-slate-600 dark:text-slate-300">
-              {t('demos.vector_space.loading')}
+              {t('demos.ai_gallery.vector_space.loading')}
             </p>
           </div>
         </CardContent>
@@ -182,13 +198,13 @@ export function VectorSpaceEnhanced() {
       {/* 页面标题 */}
       <div className="text-center mb-8">
         <Badge variant="secondary" className="mb-4">
-          {t('demos.vector_space.badge')}
+          {t('demos.ai_gallery.vector_space.badge')}
         </Badge>
         <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          {t('demos.vector_space.title')}
+          {t('demos.ai_gallery.vector_space.title')}
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
-          {t('demos.vector_space.description')}
+          {t('demos.ai_gallery.vector_space.description')}
         </p>
       </div>
 
@@ -206,7 +222,7 @@ export function VectorSpaceEnhanced() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2 text-blue-900 dark:text-blue-100">
                     <Info className="w-5 h-5 text-blue-600" />
-                    {t('demos.vector_space.intro.title')}
+                    {t('demos.ai_gallery.vector_space.intro.title')}
                   </CardTitle>
                   <Button 
                     variant="ghost" 
@@ -220,10 +236,10 @@ export function VectorSpaceEnhanced() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-slate-700 dark:text-slate-300">
-                  {t('demos.vector_space.intro.description')}
+                  {t('demos.ai_gallery.vector_space.intro.description')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                  {(t.raw('demos.vector_space.intro.details') as string[]).map((detail, index) => (
+                  {(t.raw('demos.ai_gallery.vector_space.intro.details') as string[]).map((detail, index) => (
                     <motion.div 
                       key={index}
                       className="flex items-start gap-2"
@@ -252,7 +268,7 @@ export function VectorSpaceEnhanced() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
-                  placeholder={t('demos.vector_space.search_placeholder')}
+                  placeholder={t('demos.ai_gallery.vector_space.search_placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -266,17 +282,17 @@ export function VectorSpaceEnhanced() {
             {/* 状态信息和控制按钮 */}
             <div className="flex items-center gap-4">
               <Badge variant="outline" className="text-sm">
-                {t('demos.vector_space.stats.zoom_level', { level: transform.k.toFixed(1) })}
+                {t('demos.ai_gallery.vector_space.stats.zoom_level', { level: transform.k.toFixed(1) })}
               </Badge>
               
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={zoomOut} title={t('demos.vector_space.controls.zoom_out')}>
+                <Button variant="outline" size="sm" onClick={zoomOut} title={t('demos.ai_gallery.vector_space.controls.zoom_out')}>
                   <ZoomOut className="w-4 h-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={zoomIn} title={t('demos.vector_space.controls.zoom_in')}>
+                <Button variant="outline" size="sm" onClick={zoomIn} title={t('demos.ai_gallery.vector_space.controls.zoom_in')}>
                   <ZoomIn className="w-4 h-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={resetView} title={t('demos.vector_space.controls.reset_view')}>
+                <Button variant="outline" size="sm" onClick={resetView} title={t('demos.ai_gallery.vector_space.controls.reset_view')}>
                   <RotateCcw className="w-4 h-4" />
                 </Button>
               </div>
@@ -421,13 +437,13 @@ export function VectorSpaceEnhanced() {
           >
             <h4 className="font-medium text-sm mb-2 flex items-center gap-2">
               <Eye className="w-4 h-4 text-blue-600" />
-              {t('demos.vector_space.instructions.title')}
+              {t('demos.ai_gallery.vector_space.instructions.title')}
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600 dark:text-slate-400">
-              <div>• {t('demos.vector_space.instructions.zoom')}</div>
-              <div>• {t('demos.vector_space.instructions.pan')}</div>
-              <div>• {t('demos.vector_space.instructions.click')}</div>
-              <div>• {t('demos.vector_space.instructions.search')}</div>
+              <div>• {t('demos.ai_gallery.vector_space.instructions.zoom')}</div>
+              <div>• {t('demos.ai_gallery.vector_space.instructions.pan')}</div>
+              <div>• {t('demos.ai_gallery.vector_space.instructions.click')}</div>
+              <div>• 搜索图片名称进行过滤</div>
             </div>
           </motion.div>
         </CardContent>
