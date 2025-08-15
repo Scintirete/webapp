@@ -270,7 +270,7 @@ export default async function Home() {
                 
                 <div className="text-center mb-6">
                   <Button asChild variant="outline" size="lg" className="mb-3">
-                    <a href="http://scintirete-manager-ui.cloud.wj2015.com" target="_blank" rel="noopener noreferrer">
+                    <a href="https://dms.scintirete.top" target="_blank" rel="noopener noreferrer">
                       <LayoutDashboard className="w-5 h-5 mr-2" />
                       {t('quickstart.download_guide.manager_ui_link')}
                       <ExternalLink className="w-4 h-4 ml-2" />
