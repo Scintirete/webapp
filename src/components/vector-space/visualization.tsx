@@ -15,7 +15,7 @@ interface VectorSpaceVisualizationProps {
   searchQuery: string
   scales: { xScale: ScaleLinear<number, number>; yScale: ScaleLinear<number, number> }
   onPointHover: (pointId: string | null) => void
-  onPointClick: (point: VectorPoint | ClusterPoint) => void
+  onPointClick: (point: VectorPoint | ClusterPoint, event?: React.MouseEvent) => void
   getPointRadius: (isHovered: boolean, isFiltered: boolean) => number
 }
 
@@ -63,25 +63,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
             />
           )}
 
-          {/* 坐标轴 */}
-          <g transform={`translate(${transform.x}, ${transform.y}) scale(${transform.k})`}>
-            <line
-              x1={scales.xScale(0)}
-              y1={scales.yScale(0)}
-              x2={scales.xScale(1)}
-              y2={scales.yScale(0)}
-              stroke="rgba(148, 163, 184, 0.3)"
-              strokeWidth={1 / transform.k}
-            />
-            <line
-              x1={scales.xScale(0)}
-              y1={scales.yScale(0)}
-              x2={scales.xScale(0)}
-              y2={scales.yScale(1)}
-              stroke="rgba(148, 163, 184, 0.3)"
-              strokeWidth={1 / transform.k}
-            />
-          </g>
+
 
           {/* 数据点 */}
           <g transform={`translate(${transform.x}, ${transform.y}) scale(${transform.k})`}>
@@ -116,7 +98,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                       className="cursor-pointer"
                       onMouseEnter={() => onPointHover(point.id)}
                       onMouseLeave={() => onPointHover(null)}
-                      onClick={() => onPointClick(point)}
+                      onClick={(e) => onPointClick(point, e)}
                       whileHover={{ scale: 1.1 }}
                       transition={{ duration: 0.2 }}
                     />
@@ -130,7 +112,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                       className="cursor-pointer"
                       onMouseEnter={() => onPointHover(point.id)}
                       onMouseLeave={() => onPointHover(null)}
-                      onClick={() => onPointClick(point)}
+                      onClick={(e) => onPointClick(point, e)}
                       whileHover={{ scale: 1.2 }}
                       transition={{ duration: 0.2 }}
                     />
@@ -168,7 +150,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                   className="cursor-pointer"
                   onMouseEnter={() => onPointHover(point.id)}
                   onMouseLeave={() => onPointHover(null)}
-                  onClick={() => onPointClick(point)}
+                  onClick={(e) => onPointClick(point, e)}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   whileHover={{ scale: 1.2 }}
@@ -216,7 +198,7 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                       height={imageSize - 4 / transform.k}
                       href={`/gallary/${'img_name' in point ? point.img_name : ''}`}
                       className="cursor-pointer"
-                      onClick={() => onPointClick(point)}
+                      onClick={(e) => onPointClick(point, e)}
                       onError={(e) => {
                         // 如果图片加载失败，隐藏预览
                         const target = e.target as SVGImageElement

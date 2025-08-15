@@ -279,18 +279,32 @@ export function useVectorSpace() {
   }, [searchQuery, isSearching, points])
 
   // 点击处理
-  const handlePointClick = useCallback((point: VectorPoint | ClusterPoint) => {
+  const handlePointClick = useCallback((point: VectorPoint | ClusterPoint, event?: React.MouseEvent) => {
     if ('isCluster' in point && point.isCluster) {
       // 如果是聚类点，放大到该区域
-      if (svgRef.current && zoomRef.current) {
+      if (svgRef.current && zoomRef.current && event) {
         const svg = select(svgRef.current)
-        const targetScale = Math.min(10, transform.k * 2) // 放大2倍，但不超过6倍
-        const targetX = dimensions.width / 2 - scales.xScale(point.x) * targetScale
-        const targetY = dimensions.height / 2 - scales.yScale(point.y) * targetScale
+        const svgRect = svgRef.current.getBoundingClientRect()
         
+        // 获取鼠标在SVG中的坐标
+        const mouseX = event.clientX - svgRect.left
+        const mouseY = event.clientY - svgRect.top
+        
+        const targetScale = Math.min(10, transform.k * 2) // 放大2倍，但不超过10倍
+        
+        // 标准的D3缩放到特定点的方法
+        // 1. 计算鼠标点在当前变换下的"世界坐标"
+        const worldX = (mouseX - transform.x) / transform.k
+        const worldY = (mouseY - transform.y) / transform.k
+        
+        // 2. 计算新的偏移量，使得世界坐标点在放大后仍然位于鼠标位置
+        const newX = mouseX - worldX * targetScale
+        const newY = mouseY - worldY * targetScale
+        
+        // 3. 应用新的变换
         svg.transition()
           .duration(750)
-          .call(zoomRef.current.transform, zoomIdentity.translate(targetX, targetY).scale(targetScale))
+          .call(zoomRef.current.transform, zoomIdentity.translate(newX, newY).scale(targetScale))
       }
     } else {
       // 如果是单个点，显示图片
@@ -298,7 +312,7 @@ export function useVectorSpace() {
         setSelectedImage(point.img_name)
       }
     }
-  }, [dimensions, scales, transform.k])
+  }, [dimensions, transform])
 
   // 响应式尺寸更新
   useEffect(() => {
