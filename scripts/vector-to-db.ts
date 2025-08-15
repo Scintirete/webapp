@@ -179,7 +179,7 @@ async function createCollection(client: any, databaseName: string, collectionNam
       metricType: DistanceMetric.COSINE, // 使用余弦相似度
       hnswConfig: {
         m: 16,
-        efConstruction: 200
+        efConstruction: 200,
       }
     };
     
@@ -219,7 +219,7 @@ async function insertVectorsBatch(
       elements: data.vector,
       metadata: {
         img_name: data.img_name,
-        created_at: new Date().toISOString()
+        // created_at: new Date().toISOString()
       }
     }));
     

@@ -230,7 +230,7 @@ export function GallerySearchResults({
                           : 'bg-orange-500'
                       } text-white font-semibold shadow-lg`}
                     >
-                      {Math.round(result.similarity)}%
+                      {result.similarity}%
                     </Badge>
                   </div>
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
@@ -250,7 +250,7 @@ export function GallerySearchResults({
         <div className="text-center mt-8">
           <div className="flex items-center justify-center gap-3 text-slate-600 dark:text-slate-400">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span>正在加载更多...</span>
+            <span>loading...</span>
           </div>
         </div>
       )}

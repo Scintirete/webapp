@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     
     const searchResult = await gallerySearchService.search({
       queryVector: embedding_response.data.embedding,
-      limit: 50,  // 召回50条
+      limit: 50,
       minSimilarity: 30, // 匹配度>30的结果
     })
     

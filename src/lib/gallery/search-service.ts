@@ -42,7 +42,7 @@ export class GallerySearchService {
         collectionName: collection,
         queryVector: queryVector,
         topK: limit,
-        // 可以添加过滤条件等更多参数
+        efSearch: limit * 2,
       });
 
       console.log(`📊 向量搜索完成 - 找到 ${searchResults.results?.length || 0} 个结果`);
@@ -76,8 +76,8 @@ export class GallerySearchService {
         // 计算匹配度: max(0, 余弦相似度) * 100
         // Scintirete返回的distance需要转换为相似度
         const distance = result.distance || 0;
-        // 对于余弦距离，相似度 = 1 - distance，然后乘以100
-        const similarity = Math.max(0, (1 - distance)) * 100;
+        // 对于余弦距离，相似度 = distance，然后乘以100
+        const similarity = Math.max(0, distance) * 100;
         
         // 构建图片URL - Scintirete在metadata中存储img_name
         const metadata = result.metadata || {};
@@ -89,6 +89,7 @@ export class GallerySearchService {
           img_name: imageName,
           similarity: Math.round(similarity * 100) / 100, // 保留两位小数
           src: imageUrl,
+          distance: distance,
         } as GallerySearchResult;
       })
       .filter((result: GallerySearchResult) => result.similarity >= minSimilarity)
