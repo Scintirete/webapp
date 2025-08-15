@@ -100,7 +100,7 @@ export function GalleryExampleImages({ onExampleClick, currentImageCount }: Exam
               key={`${src}-${index}`}
               onClick={() => handleExampleClick(src)}
               disabled={isShuffling || !isHydrated}
-              className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all transform hover:scale-105 disabled:cursor-not-allowed"
+              className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all transform hover:scale-105 disabled:cursor-not-allowed cursor-pointer"
               title={t('demos.ai_gallery.example_image_title', { index: index + 1 })}
             >
               <img

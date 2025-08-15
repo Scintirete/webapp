@@ -34,7 +34,7 @@ export function ImageModal({ selectedImage, onClose }: ImageModalProps) {
             {/* 关闭按钮 */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+              className="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl z-10 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 transition-colors cursor-pointer"
             >
               ×
             </button>

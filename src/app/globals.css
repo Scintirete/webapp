@@ -234,8 +234,8 @@
 .animate-text-gradient {
   background: linear-gradient(90deg, #a855f7, #ec4899, #fbbf24, #a855f7);
   background-size: 200% auto;
-  background-clip: text;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: text-gradient-flow 3s ease-in-out infinite;
 }
@@ -255,4 +255,25 @@
 
 .cursor-grabbing {
   cursor: grabbing;
+}
+
+/* 确保所有可交互元素都有正确的指针样式 */
+button:not(:disabled), 
+[role="button"]:not([aria-disabled="true"]), 
+a[href], 
+select:not(:disabled),
+[onclick]:not(:disabled),
+[data-clickable]:not(:disabled),
+.clickable:not(:disabled) {
+  cursor: pointer;
+}
+
+/* 禁用状态的光标样式 */
+button:disabled, 
+[role="button"][aria-disabled="true"], 
+select:disabled,
+[onclick]:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
 }

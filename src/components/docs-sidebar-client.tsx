@@ -52,7 +52,7 @@ export function DocsSidebarClient({
           <div key={node.id} className="select-none">
             <button
               onClick={() => toggleFolder(node.id)}
-              className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+              className={`w-full text-left px-3 py-2 rounded-md transition-colors flex items-center space-x-2 cursor-pointer ${
                 isExpanded ? 'bg-slate-100 dark:bg-slate-800' : 'hover:bg-slate-100 dark:hover:bg-slate-800'
               } ${level > 0 ? `ml-${level * 4}` : ''}`}
             >
@@ -80,7 +80,7 @@ export function DocsSidebarClient({
           <Link
             key={node.id}
             href={`/${locale}/docs?path=${node.id}`}
-            className={`block w-full text-left px-3 py-2 rounded-md transition-colors flex items-center space-x-2 ${
+            className={`block w-full text-left px-3 py-2 rounded-md transition-colors flex items-center space-x-2 cursor-pointer ${
               isSelected
                 ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 border-l-4 border-yellow-500'
                 : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
