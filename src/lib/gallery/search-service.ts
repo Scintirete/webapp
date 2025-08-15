@@ -73,11 +73,12 @@ export class GallerySearchService {
   ): GallerySearchResult[] {
     return results
       .map((result: any) => {
-        // 计算匹配度: max(0, 余弦相似度) * 100
+        // 计算匹配度: 匹配度 = (max(0, 余弦相似度))^k * 100，嵌入空间太稀疏了，幂缩放一下优化展示效果
+        const k = 0.5;
         // Scintirete返回的distance需要转换为相似度
         const distance = result.distance || 0;
-        // 对于余弦距离，相似度 = distance，然后乘以100
-        const similarity = Math.max(0, distance) * 100;
+        // 对于余弦距离，相似度 = distance^k，然后乘以100
+        const similarity = Math.round(Math.max(0, distance) ** k * 100 * 100) / 100;
         
         // 构建图片URL - Scintirete在metadata中存储img_name
         const metadata = result.metadata || {};
@@ -87,7 +88,7 @@ export class GallerySearchService {
         return {
           id: result.id || String(Math.random()),
           img_name: imageName,
-          similarity: Math.round(similarity * 100) / 100, // 保留两位小数
+          similarity: similarity, // 保留两位小数
           src: imageUrl,
           distance: distance,
         } as GallerySearchResult;
