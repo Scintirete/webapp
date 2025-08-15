@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Github, BookOpen, FileText } from 'lucide-react'
+import { Github, BookOpen, FileText, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { EcosystemDropdown } from '@/components/ecosystem-dropdown'
@@ -17,7 +17,7 @@ export async function SiteNavigation({ showDocsIndicator = false }: SiteNavigati
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center space-x-2">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2 cursor-pointer">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
                   src="/logo.png"
@@ -43,8 +43,17 @@ export async function SiteNavigation({ showDocsIndicator = false }: SiteNavigati
           
           <div className="hidden md:flex items-center space-x-6 text-sm">
             <Link 
+              href="/demos" 
+              className="group flex items-center space-x-2 animate-gentle-float hover:scale-105 transition-transform duration-600 cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 animate-sparkle-continuous" />
+              <span className="font-medium animate-text-gradient">
+                {t('nav.demos')}
+              </span>
+            </Link>
+            <Link 
               href="/docs" 
-              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
+              className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors cursor-pointer"
             >
               <BookOpen className="w-4 h-4" />
               <span>{t('nav.docs')}</span>

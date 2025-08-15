@@ -141,6 +141,139 @@
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -100% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(168, 85, 247, 0.4), 0 0 10px rgba(168, 85, 247, 0.3), 0 0 15px rgba(168, 85, 247, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.5), 0 0 30px rgba(168, 85, 247, 0.4);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes text-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes sparkle-continuous {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    color: rgb(168, 85, 247);
+  }
+  25% {
+    transform: scale(1.1) rotate(90deg);
+    color: rgb(236, 72, 153);
+  }
+  50% {
+    transform: scale(1) rotate(180deg);
+    color: rgb(251, 191, 36);
+  }
+  75% {
+    transform: scale(1.1) rotate(270deg);
+    color: rgb(168, 85, 247);
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
 .animate-sparkle {
   animation: sparkle 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 1s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background: linear-gradient(-45deg, #a855f7, #ec4899, #fbbf24, #a855f7);
+  background-size: 300% 300%;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+.animate-text-gradient {
+  background: linear-gradient(90deg, #a855f7, #ec4899, #fbbf24, #a855f7);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-gradient-flow 3s ease-in-out infinite;
+}
+
+.animate-sparkle-continuous {
+  animation: sparkle-continuous 4s ease-in-out infinite;
+}
+
+.animate-gentle-float {
+  animation: gentle-float 3s ease-in-out infinite;
+}
+
+/* 自定义 cursor 样式 */
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}
+
+/* 确保所有可交互元素都有正确的指针样式 */
+button:not(:disabled), 
+[role="button"]:not([aria-disabled="true"]), 
+a[href], 
+select:not(:disabled),
+[onclick]:not(:disabled),
+[data-clickable]:not(:disabled),
+.clickable:not(:disabled) {
+  cursor: pointer;
+}
+
+/* 禁用状态的光标样式 */
+button:disabled, 
+[role="button"][aria-disabled="true"], 
+select:disabled,
+[onclick]:disabled,
+input:disabled,
+textarea:disabled {
+  cursor: not-allowed;
 }

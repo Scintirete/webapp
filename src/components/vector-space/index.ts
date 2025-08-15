@@ -1,0 +1,7 @@
+export { VectorSpaceControls } from './controls'
+export { VectorSpaceVisualization } from './visualization'
+export { VectorSpaceIntro } from './intro'
+export { VectorSpaceInstructions } from './instructions'
+export { ImageModal } from './image-modal'
+export { useVectorSpace } from './use-vector-space'
+export type { VectorPoint, ClusterPoint, ViewTransform } from './types'

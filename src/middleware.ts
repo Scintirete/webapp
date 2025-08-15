@@ -10,6 +10,6 @@ export const config = {
     // - ../public (static files)
     // - ../api (API routes)
     // - ../_next (internal Next.js files)
-    '/((?!api|_next|favicon.ico|screenshots|logo.png|manager-ui.png).*)'
+    '/((?!api|_next|favicon.ico|screenshots|gallary|logo.png|manager-ui.png).*)'
   ]
 };
