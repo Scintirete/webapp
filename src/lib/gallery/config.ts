@@ -9,7 +9,7 @@ import { GalleryConfig } from './types';
  * 构建图片URL的工具函数
  */
 export function buildImageUrl(imageName: string, baseUrl?: string): string {
-  const publicUrl = baseUrl || process.env.NEXT_PUBLIC_GALLARY_BASE_URL || '/gallary/';
+  const publicUrl = baseUrl || getGalleryConfig().publicUrl;
   const normalizedUrl = publicUrl.endsWith('/') ? publicUrl : publicUrl + '/';
   return `${normalizedUrl}${imageName}`;
 }
@@ -19,7 +19,7 @@ export function buildImageUrl(imageName: string, baseUrl?: string): string {
  */
 export function getGalleryConfig(): GalleryConfig {
   return {
-    publicUrl: process.env.NEXT_PUBLIC_GALLARY_BASE_URL || '/gallary/',
+    publicUrl: process.env.NEXT_PUBLIC_GALLARY_BASE_URL || 'https://cdn.scintirete.top/gallary/',
     defaultDatabase: 'webapp',
     defaultCollection: 'gallary',
     defaultRecallLimit: 300,
