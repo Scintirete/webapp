@@ -199,7 +199,9 @@
         "stats": {
           "total_images": "Total {count} images",
           "zoom_level": "Zoom level: {level}x",
-          "position": "Position: ({x}, {y})"
+          "position": "Position: ({x}, {y})",
+          "visible_count": "Visible: {visible} / Total: {total}",
+          "preview_count": "Preview: {count}"
         },
         "intro": {
           "title": "What is Vector Space?",
@@ -222,11 +224,19 @@
           "zoom": "Mouse wheel or trackpad to zoom",
           "pan": "Drag mouse to pan view",
           "click": "Click dots to view image details",
-          "keyboard": "Use keyboard arrow keys for fine positioning"
+          "keyboard": "Use keyboard arrow keys for fine positioning",
+          "search": "Search image names for filtering",
+          "cluster": "Cluster points show multiple images, click to zoom in",
+          "preview": "Automatic image preview at high zoom levels"
         },
         "loading": "Loading vector space data...",
         "error": "Failed to load vector space data",
-        "search_placeholder": "Search image names..."
+        "search_placeholder": "Search image names...",
+        "cluster_tooltip": "Cluster: {count} images",
+        "cluster_action": "Click to view details",
+        "modal": {
+          "close_hint": "Click outside or the close button to close the viewer"
+        }
       }
     },
     "vector_space": {
