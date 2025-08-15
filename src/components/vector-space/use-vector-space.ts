@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { scaleLinear } from 'd3-scale'
-import { zoom as d3Zoom, ZoomBehavior } from 'd3-zoom'
+import { zoom as d3Zoom, ZoomBehavior, zoomIdentity } from 'd3-zoom'
 import { select } from 'd3-selection'
 import { GallaryImageList } from '@/data'
 import { VectorPoint, ClusterPoint, ViewTransform } from './types'
@@ -18,6 +18,9 @@ export function useVectorSpace() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [hoveredPoint, setHoveredPoint] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<VectorPoint[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+  const [hasSearched, setHasSearched] = useState(false)
 
   // 转换数据为适合的格式
   const points = useMemo((): VectorPoint[] => {
@@ -51,11 +54,9 @@ export function useVectorSpace() {
   const visiblePoints = useMemo(() => {
     let basePoints = points
     
-    // 首先应用搜索过滤
-    if (searchQuery.trim()) {
-      basePoints = points.filter(point => 
-        point.img_name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    // 如果有搜索结果，优先显示搜索结果
+    if (hasSearched && searchResults.length > 0) {
+      basePoints = searchResults
     }
     
     // LOD系统：根据缩放级别决定显示的点数量
@@ -80,6 +81,11 @@ export function useVectorSpace() {
     
     // 确保不超过全局限制
     maxPoints = Math.min(maxPoints, GLOBAL_MAX_POINTS)
+    
+    // 高倍缩放时（>=15倍）不使用聚类，直接显示前N个点
+    if (zoomLevel >= 10) {
+      return basePoints.slice(0, GLOBAL_MAX_POINTS)
+    }
     
     // 如果点数超过最大限制，使用空间分布算法选择代表性点
     if (basePoints.length <= maxPoints) {
@@ -140,7 +146,7 @@ export function useVectorSpace() {
     })
     
     return result.slice(0, maxPoints)
-  }, [points, searchQuery, transform.k])
+  }, [points, searchResults, hasSearched, transform.k])
   
   // 用于统计显示的过滤点数
   const filteredPoints = useMemo(() => {
@@ -164,8 +170,8 @@ export function useVectorSpace() {
   // 计算需要显示预览图片的点（当缩放级别足够高时）
   // 优化：使用防抖的transform减少频繁计算
   const pointsWithPreview = useMemo(() => {
-    const PREVIEW_ZOOM_THRESHOLD = 3 // 缩放级别超过3时开始显示预览
-    const MAX_PREVIEW_COUNT = 20 // 最大同时显示的预览图片数量
+    const PREVIEW_ZOOM_THRESHOLD = 10 // 缩放级别超过3时开始显示预览
+    const MAX_PREVIEW_COUNT = 100 // 最大同时显示的预览图片数量
     
     if (debouncedTransform.k < PREVIEW_ZOOM_THRESHOLD) {
       return new Set<string>()
@@ -220,23 +226,77 @@ export function useVectorSpace() {
     return Math.max(2, Math.min(12, radius))
   }, [transform.k])
 
+  // 清除搜索结果
+  const clearSearch = useCallback(() => {
+    setSearchQuery('')
+    setSearchResults([])
+    setHasSearched(false)
+  }, [])
+
+  // AI搜索处理
+  const handleSearch = useCallback(async () => {
+    if (!searchQuery.trim() || isSearching) return
+    
+    setIsSearching(true)
+    
+    try {
+      const formData = new FormData()
+      formData.append('query', searchQuery.trim())
+      formData.append('limit', '200') // 向量空间默认200个结果
+      
+      const response = await fetch('/api/ai-gallery/search', {
+        method: 'POST',
+        body: formData,
+      })
+      
+      if (!response.ok) {
+        throw new Error(`搜索失败: ${response.status} ${response.statusText}`)
+      }
+      
+      const result = await response.json()
+      
+      // 转换搜索结果为VectorPoint格式
+      const searchResultPoints: VectorPoint[] = result.results.map((item: any, index: number) => {
+        // 在原始数据中找到匹配的点
+        const originalPoint = points.find(p => p.img_name === item.img_name)
+        return originalPoint || {
+          img_name: item.img_name,
+          x: Math.random(), // 如果找不到原始点，使用随机位置
+          y: Math.random(),
+          id: `search-${index}`
+        }
+      })
+      
+      setSearchResults(searchResultPoints)
+      setHasSearched(true)
+      
+    } catch (error) {
+      console.error('搜索出错:', error)
+      // 可以添加错误提示
+    } finally {
+      setIsSearching(false)
+    }
+  }, [searchQuery, isSearching, points])
+
   // 点击处理
   const handlePointClick = useCallback((point: VectorPoint | ClusterPoint) => {
     if ('isCluster' in point && point.isCluster) {
       // 如果是聚类点，放大到该区域
       if (svgRef.current && zoomRef.current) {
         const svg = select(svgRef.current)
-        const targetScale = Math.min(6, transform.k * 2) // 放大2倍，但不超过6倍
+        const targetScale = Math.min(10, transform.k * 2) // 放大2倍，但不超过6倍
         const targetX = dimensions.width / 2 - scales.xScale(point.x) * targetScale
         const targetY = dimensions.height / 2 - scales.yScale(point.y) * targetScale
         
         svg.transition()
           .duration(750)
-          .call(zoomRef.current.transform, { x: targetX, y: targetY, k: targetScale } as any)
+          .call(zoomRef.current.transform, zoomIdentity.translate(targetX, targetY).scale(targetScale))
       }
     } else {
       // 如果是单个点，显示图片
-      setSelectedImage(point.img_name)
+      if ('img_name' in point) {
+        setSelectedImage(point.img_name)
+      }
     }
   }, [dimensions, scales, transform.k])
 
@@ -278,7 +338,7 @@ export function useVectorSpace() {
     const svg = select(svgRef.current)
     
     const zoomBehavior = d3Zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.1, 10])
+      .scaleExtent([0.1, 20])
       .on('zoom', (event) => {
         const { x, y, k } = event.transform
         setTransform({ x, y, k })
@@ -298,7 +358,7 @@ export function useVectorSpace() {
       const svg = select(svgRef.current)
       svg.transition()
         .duration(750)
-        .call(zoomRef.current.transform, { x: 0, y: 0, k: 1 } as any)
+        .call(zoomRef.current.transform, zoomIdentity)
     }
   }, [])
 
@@ -336,6 +396,8 @@ export function useVectorSpace() {
     setHoveredPoint,
     searchQuery,
     setSearchQuery,
+    isSearching,
+    hasSearched,
     
     // Computed values
     points,
@@ -347,6 +409,8 @@ export function useVectorSpace() {
     // Functions
     getPointRadius,
     handlePointClick,
+    handleSearch,
+    clearSearch,
     resetView,
     zoomIn,
     zoomOut

@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const query = formData.get('query') as string
     const imageFiles = formData.getAll('images') as File[]
+    const limitParam = formData.get('limit') as string
+    const limit = limitParam ? Math.min(Math.max(parseInt(limitParam), 1), 200) : 50 // 默认50，限制1-200
     
     // 验证输入
     if (!query && imageFiles.length === 0) {
@@ -105,7 +107,7 @@ export async function POST(request: NextRequest) {
     
     const searchResult = await gallerySearchService.search({
       queryVector: embedding_response.data.embedding,
-      limit: 50,
+      limit: limit,
       minSimilarity: 30, // 匹配度>30的结果
     })
     

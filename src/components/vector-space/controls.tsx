@@ -9,6 +9,10 @@ import { useTranslations } from 'next-intl'
 interface VectorSpaceControlsProps {
   searchQuery: string
   onSearchChange: (query: string) => void
+  onSearch: () => void
+  onClearSearch: () => void
+  isSearching: boolean
+  hasSearched: boolean
   visiblePointsCount: number
   totalPointsCount: number
   previewCount: number
@@ -21,6 +25,10 @@ interface VectorSpaceControlsProps {
 export function VectorSpaceControls({
   searchQuery,
   onSearchChange,
+  onSearch,
+  onClearSearch,
+  isSearching,
+  hasSearched,
   visiblePointsCount,
   totalPointsCount,
   previewCount,
@@ -41,12 +49,33 @@ export function VectorSpaceControls({
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
-                placeholder={t('demos.ai_gallery.vector_space.search_placeholder')}
+                placeholder="描述你想要搜索的图片特征..."
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isSearching && searchQuery.trim()) {
+                    onSearch()
+                  }
+                }}
                 className="w-full pl-10 pr-4 py-2 text-sm border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
+            <Button 
+              onClick={onSearch}
+              disabled={isSearching || !searchQuery.trim()}
+              className="whitespace-nowrap"
+            >
+              {isSearching ? '搜索中...' : '搜索'}
+            </Button>
+            {hasSearched && (
+              <Button 
+                variant="outline"
+                onClick={onClearSearch}
+                className="whitespace-nowrap"
+              >
+                清除搜索
+              </Button>
+            )}
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-sm whitespace-nowrap">
                 {t('demos.ai_gallery.vector_space.stats.visible_count', { visible: visiblePointsCount, total: totalPointsCount })}

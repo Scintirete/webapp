@@ -260,8 +260,8 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                   
                   // 聚类点的悬停提示
                   if ('isCluster' in point && point.isCluster) {
-                    const cx = (scales.xScale(point.x) + transform.x) * transform.k
-                    const cy = (scales.yScale(point.y) + transform.y) * transform.k
+                    const cx = scales.xScale(point.x) * transform.k + transform.x
+                    const cy = scales.yScale(point.y) * transform.k + transform.y
                     
                     return (
                       <g>
@@ -299,8 +299,8 @@ export const VectorSpaceVisualization = forwardRef<SVGSVGElement, VectorSpaceVis
                   
                   // 单个点的悬停提示
                   if (!('isCluster' in point)) {
-                    const cx = (scales.xScale(point.x) + transform.x) * transform.k
-                    const cy = (scales.yScale(point.y) + transform.y) * transform.k
+                    const cx = scales.xScale(point.x) * transform.k + transform.x
+                    const cy = scales.yScale(point.y) * transform.k + transform.y
                     
                     return (
                       <g>

@@ -33,6 +33,8 @@ export function VectorSpaceEnhanced() {
     setHoveredPoint,
     searchQuery,
     setSearchQuery,
+    isSearching,
+    hasSearched,
     
     // Computed values
     points,
@@ -44,6 +46,8 @@ export function VectorSpaceEnhanced() {
     // Functions
     getPointRadius,
     handlePointClick,
+    handleSearch,
+    clearSearch,
     resetView,
     zoomIn,
     zoomOut
@@ -93,6 +97,10 @@ export function VectorSpaceEnhanced() {
       <VectorSpaceControls
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onSearch={handleSearch}
+        onClearSearch={clearSearch}
+        isSearching={isSearching}
+        hasSearched={hasSearched}
         visiblePointsCount={visiblePoints.length}
         totalPointsCount={points.length}
         previewCount={pointsWithPreview.size}
