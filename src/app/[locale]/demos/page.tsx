@@ -40,7 +40,7 @@ export default async function DemosPage() {
         {/* 演示项目展示区域 */}
         <section className="py-12 px-4">
           <div className="max-w-6xl mx-auto">
-            <div className="grid lg:grid-cols-1 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8">
               {/* AI 相册检索演示卡片 */}
               <Card className="relative overflow-hidden border-l-4 border-l-purple-500 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-xl">
                 {/* 卡片背景装饰 */}
@@ -67,8 +67,8 @@ export default async function DemosPage() {
                   </CardHeader>
 
                   <CardContent className="pt-0">
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                      {/* 左侧：演示图片展示位 */}
+                    <div className="space-y-6">
+                      {/* 演示图片展示位 */}
                       <div className="relative">
                         <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-xl overflow-hidden shadow-lg">
                           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20">
@@ -97,60 +97,181 @@ export default async function DemosPage() {
                         </div>
                       </div>
 
-                      {/* 右侧：功能特点介绍 */}
-                      <div className="space-y-6">
-                        <div className="space-y-4">
-                          <div className="flex items-start space-x-3">
-                            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
-                            </div>
-                            <div>
-                              <div className="font-medium text-slate-900 dark:text-white">
-                                {t('demos.ai_gallery.features.upload')}
-                              </div>
-                              <div className="text-sm text-slate-600 dark:text-slate-400">
-                                {t('demos.ai_gallery.features.upload_desc')}
-                              </div>
-                            </div>
+                      {/* 功能特点介绍 */}
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
                           </div>
-
-                          <div className="flex items-start space-x-3">
-                            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.ai_gallery.features.upload')}
                             </div>
-                            <div>
-                              <div className="font-medium text-slate-900 dark:text-white">
-                                {t('demos.ai_gallery.features.vector_search')}
-                              </div>
-                              <div className="text-sm text-slate-600 dark:text-slate-400">
-                                {t('demos.ai_gallery.features.vector_search_desc')}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex items-start space-x-3">
-                            <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
-                              <div className="w-2 h-2 bg-white rounded-full"></div>
-                            </div>
-                            <div>
-                              <div className="font-medium text-slate-900 dark:text-white">
-                                {t('demos.ai_gallery.features.realtime')}
-                              </div>
-                              <div className="text-sm text-slate-600 dark:text-slate-400">
-                                {t('demos.ai_gallery.features.realtime_desc')}
-                              </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.ai_gallery.features.upload_desc')}
                             </div>
                           </div>
                         </div>
 
-                        {/* 开始试用按钮 */}
-                        <Button asChild size="lg" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg">
-                          <Link href="/demos/ai-gallery">
-                            <Sparkles className="w-5 h-5 mr-2" />
-                            {t('demos.ai_gallery.try_button')}
-                          </Link>
-                        </Button>
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.ai_gallery.features.vector_search')}
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.ai_gallery.features.vector_search_desc')}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-purple-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.ai_gallery.features.realtime')}
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.ai_gallery.features.realtime_desc')}
+                            </div>
+                          </div>
+                        </div>
                       </div>
+
+                      {/* 开始试用按钮 */}
+                      <Button asChild size="lg" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg">
+                        <Link href="/demos/ai-gallery">
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          {t('demos.ai_gallery.try_button')}
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+
+              {/* 向量空间可视化演示卡片 */}
+              <Card className="relative overflow-hidden border-l-4 border-l-blue-500 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-xl">
+                {/* 卡片背景装饰 */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl"></div>
+                
+                <div className="relative z-10">
+                  <CardHeader className="pb-6">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                          <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                            {t('demos.vector_space.badge')}
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+                          {t('demos.vector_space.title')}
+                        </CardTitle>
+                        <CardDescription className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">
+                          {t('demos.vector_space.description')}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+
+                  <CardContent className="pt-0">
+                    <div className="space-y-6">
+                      {/* 演示图片展示位 */}
+                      <div className="relative">
+                        <div className="aspect-video bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-xl overflow-hidden shadow-lg">
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20">
+                            <div className="text-center space-y-4">
+                              <div className="w-16 h-16 mx-auto bg-blue-500 rounded-full flex items-center justify-center">
+                                <div className="grid grid-cols-3 gap-1">
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                  <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                                </div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                                  {t('demos.vector_space.preview_title')}
+                                </div>
+                                <div className="text-xs text-slate-600 dark:text-slate-400">
+                                  {t('demos.vector_space.preview_subtitle')}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* 装饰性的向量点图案 */}
+                        <div className="absolute -bottom-4 -right-4 grid grid-cols-4 gap-1 opacity-60">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
+                        </div>
+                      </div>
+
+                      {/* 功能特点介绍 */}
+                      <div className="space-y-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.vector_space.features.interactive')}
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.vector_space.features.interactive_desc')}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.vector_space.features.clustering')}
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.vector_space.features.clustering_desc')}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start space-x-3">
+                          <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
+                            <div className="w-2 h-2 bg-white rounded-full"></div>
+                          </div>
+                          <div>
+                            <div className="font-medium text-slate-900 dark:text-white">
+                              {t('demos.vector_space.features.performance')}
+                            </div>
+                            <div className="text-sm text-slate-600 dark:text-slate-400">
+                              {t('demos.vector_space.features.performance_desc')}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 开始试用按钮 */}
+                      <Button asChild size="lg" className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg">
+                        <Link href="/demos/vector-space">
+                          <Sparkles className="w-5 h-5 mr-2" />
+                          {t('demos.vector_space.try_button')}
+                        </Link>
+                      </Button>
                     </div>
                   </CardContent>
                 </div>

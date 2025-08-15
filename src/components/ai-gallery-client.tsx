@@ -3,8 +3,9 @@
 import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AnimatedImageBackground } from '@/components/animated-image-background'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Eye } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
 import { AI_GALLERY_CONFIG, validateFile, ERROR_KEYS } from '@/lib/ai-gallery-config'
@@ -14,6 +15,7 @@ import {
   GalleryExampleImages,
   SearchFormRef
 } from '@/components/gallery'
+import { Link } from '@/i18n/navigation'
 
 interface SearchResult {
   id: string
@@ -150,6 +152,29 @@ export function AIGalleryClient() {
                 onExampleClick={handleExampleClick}
                 currentImageCount={currentImageCount}
               />
+
+              {/* 向量空间可视化简介 */}
+              <div className="p-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Eye className="w-4 h-4 text-blue-600" />
+                    <div>
+                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                        {t('demos.ai_gallery.vector_space.title')}
+                      </div>
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
+                        {t('demos.ai_gallery.vector_space.brief_description')}
+                      </div>
+                    </div>
+                  </div>
+                  <Button asChild size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-800 dark:hover:bg-blue-950/30">
+                    <Link href="/demos/vector-space" className="inline-flex items-center gap-1.5">
+                      {t('demos.ai_gallery.vector_space.view_button')}
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
             </>
           ) : (
             /* 搜索结果 */

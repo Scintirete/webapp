@@ -188,6 +188,63 @@
         "vector_search_desc": "基于 HNSW 算法的毫秒级相似图像检索",
         "realtime": "实时响应",
         "realtime_desc": "流畅的用户体验，即时展示搜索结果"
+      },
+      "vector_space": {
+        "title": "相册向量分布图",
+        "badge": "相册可视化",
+        "description": "探索当前相册中所有图片在向量空间的分布情况，了解图片间的相似性关系",
+        "brief_description": "查看相册图片的向量分布",
+        "view_button": "查看分布图",
+        "navigation_title": "向量空间导航",
+        "stats": {
+          "total_images": "总计 {count} 张图片",
+          "zoom_level": "缩放级别: {level}x",
+          "position": "位置: ({x}, {y})"
+        },
+        "intro": {
+          "title": "什么是向量空间？",
+          "description": "每张图片通过深度学习模型转换为高维向量，然后使用 UMAP 算法降维到二维平面。相似的图片在空间中靠得更近。",
+          "details": [
+            "图片经过视觉特征提取模型处理，生成 2048 维向量",
+            "使用 UMAP 降维算法将高维向量投影到二维平面", 
+            "相似图片在向量空间中的距离更近，形成聚类效应",
+            "点击任意点可以查看对应的图片，体验向量搜索的魅力"
+          ]
+        },
+        "controls": {
+          "zoom_in": "放大",
+          "zoom_out": "缩小", 
+          "reset_view": "重置视图",
+          "toggle_labels": "显示/隐藏标签"
+        },
+        "instructions": {
+          "title": "操作说明",
+          "zoom": "鼠标滚轮或触控板缩放",
+          "pan": "鼠标拖拽平移视图",
+          "click": "点击圆点查看图片详情",
+          "keyboard": "使用键盘方向键微调位置"
+        },
+        "loading": "正在加载向量空间数据...",
+        "error": "加载向量空间数据失败",
+        "search_placeholder": "搜索图片名称..."
+      }
+    },
+    "vector_space": {
+      "badge": "数据可视化",
+      "title": "向量空间可视化",
+      "description": "交互式探索高维向量空间中的图像分布，直观理解相似性计算和聚类效果。",
+      "preview_title": "向量空间分布图",
+      "preview_subtitle": "缩放导航 • 搜索过滤 • 交互探索",
+      "try_button": "开始探索",
+      "back_to_demos": "返回演示中心",
+      "loading": "正在加载向量空间数据...",
+      "features": {
+        "interactive": "交互式探索",
+        "interactive_desc": "自由缩放和拖拽，探索向量空间的不同区域",
+        "clustering": "聚类可视化",
+        "clustering_desc": "直观看到相似图像在空间中的自然聚集",
+        "performance": "高性能渲染",
+        "performance_desc": "基于现代技术栈，流畅处理大量数据点"
       }
     }
   },

@@ -247,3 +247,12 @@
 .animate-gentle-float {
   animation: gentle-float 3s ease-in-out infinite;
 }
+
+/* 自定义 cursor 样式 */
+.cursor-grab {
+  cursor: grab;
+}
+
+.cursor-grabbing {
+  cursor: grabbing;
+}

@@ -1,21 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Shuffle } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
 import { AI_GALLERY_CONFIG, ERROR_KEYS } from '@/lib/ai-gallery-config'
+import { GallaryImageList } from '@/data'
 
-const EXAMPLE_IMAGES = [
-  'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=200&h=200&fit=crop',
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=200&h=200&fit=crop'
-]
+// 从真实图片数据中随机选择示例图片
+const getRandomExampleImages = (count: number = 6) => {
+  const shuffled = [...GallaryImageList].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count).map(item => `/gallary/${item.img_name}`)
+}
+
+// 获取固定的初始示例图片（避免水合问题）
+const getInitialExampleImages = (count: number = 6) => {
+  return GallaryImageList.slice(0, count).map(item => `/gallary/${item.img_name}`)
+}
 
 interface ExampleImagesProps {
   onExampleClick: (src: string) => Promise<void>
@@ -25,8 +28,19 @@ interface ExampleImagesProps {
 export function GalleryExampleImages({ onExampleClick, currentImageCount }: ExampleImagesProps) {
   const t = useTranslations()
   const { toast } = useToast()
-  const [currentExamples, setCurrentExamples] = useState(EXAMPLE_IMAGES)
+  const [currentExamples, setCurrentExamples] = useState(() => getInitialExampleImages(6))
   const [isShuffling, setIsShuffling] = useState(false)
+  const [isHydrated, setIsHydrated] = useState(false)
+
+  // 水合后随机化示例图片
+  useEffect(() => {
+    setIsHydrated(true)
+    // 在客户端水合后稍微延迟一下再随机化，避免闪烁
+    const timer = setTimeout(() => {
+      setCurrentExamples(getRandomExampleImages(6))
+    }, 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleExampleClick = async (src: string) => {
     // 检查文件数量限制
@@ -56,8 +70,8 @@ export function GalleryExampleImages({ onExampleClick, currentImageCount }: Exam
     
     // 添加动画延迟
     setTimeout(() => {
-      const shuffled = [...EXAMPLE_IMAGES].sort(() => Math.random() - 0.5)
-      setCurrentExamples(shuffled)
+      const newExamples = getRandomExampleImages(6)
+      setCurrentExamples(newExamples)
       setIsShuffling(false)
     }, 600)
   }
@@ -80,12 +94,12 @@ export function GalleryExampleImages({ onExampleClick, currentImageCount }: Exam
             {isShuffling ? t('demos.ai_gallery.shuffling') : t('demos.ai_gallery.random_button')}
           </Button>
         </div>
-        <div className={`grid grid-cols-3 md:grid-cols-6 gap-3 transition-all duration-600 ${isShuffling ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}`}>
+        <div className={`grid grid-cols-3 md:grid-cols-6 gap-3 transition-all duration-300 ${isShuffling ? 'opacity-50 scale-95' : 'opacity-100 scale-100'} ${!isHydrated ? 'opacity-80' : ''}`}>
           {currentExamples.map((src, index) => (
             <button
-              key={index}
+              key={`${src}-${index}`}
               onClick={() => handleExampleClick(src)}
-              disabled={isShuffling}
+              disabled={isShuffling || !isHydrated}
               className="aspect-square rounded-lg overflow-hidden hover:ring-2 hover:ring-purple-500 transition-all transform hover:scale-105 disabled:cursor-not-allowed"
               title={t('demos.ai_gallery.example_image_title', { index: index + 1 })}
             >
@@ -93,6 +107,7 @@ export function GalleryExampleImages({ onExampleClick, currentImageCount }: Exam
                 src={src}
                 alt={`Example ${index + 1}`}
                 className="w-full h-full object-cover"
+                loading="lazy"
               />
             </button>
           ))}
