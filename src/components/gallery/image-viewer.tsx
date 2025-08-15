@@ -238,7 +238,7 @@ export function ImageViewer({
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={() => handleZoom(-0.2)}
                 disabled={scale <= 0.5}
-                title="缩小 (-)"
+                title={t('demos.ai_gallery.image_controls.zoom_out')}
               >
                 <ZoomOut className="w-4 h-4" />
               </Button>
@@ -251,7 +251,7 @@ export function ImageViewer({
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={() => handleZoom(0.2)}
                 disabled={scale >= 3}
-                title="放大 (+)"
+                title={t('demos.ai_gallery.image_controls.zoom_in')}
               >
                 <ZoomIn className="w-4 h-4" />
               </Button>
@@ -264,7 +264,7 @@ export function ImageViewer({
                 variant="ghost"
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={() => handleRotate('ccw')}
-                title="逆时针旋转"
+                title={t('demos.ai_gallery.image_controls.rotate_left')}
               >
                 <RotateCcw className="w-4 h-4" />
               </Button>
@@ -273,7 +273,7 @@ export function ImageViewer({
                 variant="ghost"
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={() => handleRotate('cw')}
-                title="顺时针旋转"
+                title={t('demos.ai_gallery.image_controls.rotate_right')}
               >
                 <RotateCw className="w-4 h-4" />
               </Button>
@@ -286,7 +286,7 @@ export function ImageViewer({
                 variant="ghost"
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={resetTransform}
-                title="重置视图 (按0键)"
+                title={t('demos.ai_gallery.image_controls.reset_view')}
               >
                 <Move className="w-4 h-4" />
               </Button>
@@ -295,7 +295,7 @@ export function ImageViewer({
                 variant="ghost"
                 className="h-8 w-8 p-0 text-white hover:bg-white/20"
                 onClick={handleDownload}
-                title="下载图片"
+                title={t('demos.ai_gallery.image_controls.download')}
               >
                 <Download className="w-4 h-4" />
               </Button>
@@ -359,7 +359,7 @@ export function ImageViewer({
           {/* 键盘快捷键提示 */}
           <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-50">
             <div className="bg-black/60 backdrop-blur-sm rounded-lg px-4 py-2">
-              <p className="text-white text-xs text-center opacity-75">
+              <p className="text-white text-xs text-center opacity-75 min-w-[400px]">
                 {t('demos.ai_gallery.keyboard_shortcuts')}
               </p>
             </div>

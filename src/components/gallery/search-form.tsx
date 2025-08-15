@@ -227,6 +227,13 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
     await onSearch(searchQuery, imageFiles)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !isSearching && (searchQuery.trim() || uploadedImages.length > 0)) {
+      e.preventDefault()
+      handleSubmit()
+    }
+  }
+
   const clearForm = () => {
     setSearchQuery('')
     setUploadedImages([])
@@ -276,6 +283,7 @@ export const GallerySearchForm = forwardRef<SearchFormRef, SearchFormProps>(func
               <Input
                 value={searchQuery}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
                 onPaste={handlePaste}
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}

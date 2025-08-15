@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AnimatedImageBackground } from '@/components/animated-image-background'
-import { ArrowLeft, ExternalLink, Eye } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Eye, Database } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import { useToast } from '@/hooks/use-toast'
 import { AI_GALLERY_CONFIG, validateFile, ERROR_KEYS } from '@/lib/ai-gallery-config'
@@ -152,6 +152,29 @@ export function AIGalleryClient() {
                 onExampleClick={handleExampleClick}
                 currentImageCount={currentImageCount}
               />
+
+              {/* 数据集信息 */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-50/50 to-blue-50/50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border border-green-200/50 dark:border-green-800/50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Database className="w-4 h-4 text-green-600" />
+                    <div>
+                      <div className="text-sm font-medium text-slate-900 dark:text-white">
+                        {t('demos.dataset_info.source')}: {t('demos.dataset_info.pascal_voc_2012')}
+                      </div>
+                      <div className="text-xs text-slate-600 dark:text-slate-400">
+                        {t('demos.dataset_info.pascal_voc_description')}
+                      </div>
+                    </div>
+                  </div>
+                  <Button asChild size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50 dark:text-green-400 dark:border-green-800 dark:hover:bg-green-950/30">
+                    <a href={t('demos.dataset_info.pascal_voc_url')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5">
+                      {t('demos.dataset_info.learn_more')}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </Button>
+                </div>
+              </div>
 
               {/* 向量空间可视化简介 */}
               <div className="p-4 bg-gradient-to-r from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg border border-blue-200/50 dark:border-blue-800/50">

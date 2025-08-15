@@ -171,7 +171,7 @@ export function useVectorSpace() {
   // 优化：使用防抖的transform减少频繁计算
   const pointsWithPreview = useMemo(() => {
     const PREVIEW_ZOOM_THRESHOLD = 10 // 缩放级别超过3时开始显示预览
-    const MAX_PREVIEW_COUNT = 100 // 最大同时显示的预览图片数量
+    const MAX_PREVIEW_COUNT = 50 // 最大同时显示的预览图片数量
     
     if (debouncedTransform.k < PREVIEW_ZOOM_THRESHOLD) {
       return new Set<string>()

@@ -268,7 +268,7 @@ export function GallerySearchResults({
       {results.length === 0 && (
         <div className="text-center py-12">
           <p className="text-slate-500 dark:text-slate-400 text-lg">
-            未找到匹配的图片，请尝试调整搜索条件
+            {t('demos.ai_gallery.no_results_found')}
           </p>
         </div>
       )}
