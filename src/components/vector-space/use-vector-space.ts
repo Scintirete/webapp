@@ -170,25 +170,32 @@ export function useVectorSpace() {
   // 计算需要显示预览图片的点（当缩放级别足够高时）
   // 优化：使用防抖的transform减少频繁计算
   const pointsWithPreview = useMemo(() => {
-    const PREVIEW_ZOOM_THRESHOLD = 10 // 缩放级别超过3时开始显示预览
+    const PREVIEW_ZOOM_THRESHOLD = 10 // 缩放级别超过10时开始显示预览
     const MAX_PREVIEW_COUNT = 50 // 最大同时显示的预览图片数量
     
     if (debouncedTransform.k < PREVIEW_ZOOM_THRESHOLD) {
       return new Set<string>()
     }
     
-    // 获取当前视口范围内的点
-    const viewportPadding = 100 // 视口边距
-    const viewportLeft = -debouncedTransform.x / debouncedTransform.k - viewportPadding
-    const viewportRight = (dimensions.width - debouncedTransform.x) / debouncedTransform.k + viewportPadding
-    const viewportTop = -debouncedTransform.y / debouncedTransform.k - viewportPadding
-    const viewportBottom = (dimensions.height - debouncedTransform.y) / debouncedTransform.k + viewportPadding
+    // 计算当前视口在世界坐标系中的范围
+    const viewportPadding = 0.05 // 世界坐标系中的边距（相对于0-1的比例）
     
+    // 将屏幕坐标转换为世界坐标
+    const worldLeft = (-debouncedTransform.x) / debouncedTransform.k
+    const worldRight = (dimensions.width - debouncedTransform.x) / debouncedTransform.k
+    const worldTop = (-debouncedTransform.y) / debouncedTransform.k
+    const worldBottom = (dimensions.height - debouncedTransform.y) / debouncedTransform.k
+    
+    // 将世界坐标范围转换为数据坐标（0-1范围）
+    const dataLeft = scales.xScale.invert(worldLeft) - viewportPadding
+    const dataRight = scales.xScale.invert(worldRight) + viewportPadding
+    const dataTop = scales.yScale.invert(worldTop) - viewportPadding
+    const dataBottom = scales.yScale.invert(worldBottom) + viewportPadding
+    
+    // 筛选在视口范围内的点
     const viewportPoints = visiblePoints.filter(point => {
-      const screenX = scales.xScale(point.x)
-      const screenY = scales.yScale(point.y)
-      return screenX >= viewportLeft && screenX <= viewportRight && 
-             screenY >= viewportTop && screenY <= viewportBottom
+      return point.x >= dataLeft && point.x <= dataRight && 
+             point.y >= dataTop && point.y <= dataBottom
     })
     
     // 如果视口内的点太多，选择距离视口中心最近的点
@@ -196,15 +203,17 @@ export function useVectorSpace() {
       return new Set(viewportPoints.map(p => p.id))
     }
     
-    const viewportCenterX = (viewportLeft + viewportRight) / 2
-    const viewportCenterY = (viewportTop + viewportBottom) / 2
+    // 计算视口中心（数据坐标系）
+    const viewportCenterX = (dataLeft + dataRight) / 2
+    const viewportCenterY = (dataTop + dataBottom) / 2
     
+    // 按距离视口中心的距离排序，选择最近的点
     const sortedByDistance = viewportPoints
       .map(point => ({
         point,
         distance: Math.sqrt(
-          Math.pow(scales.xScale(point.x) - viewportCenterX, 2) +
-          Math.pow(scales.yScale(point.y) - viewportCenterY, 2)
+          Math.pow(point.x - viewportCenterX, 2) +
+          Math.pow(point.y - viewportCenterY, 2)
         )
       }))
       .sort((a, b) => a.distance - b.distance)
