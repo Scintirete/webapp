@@ -161,7 +161,7 @@
       "text_label": "文本:",
       "image_label": "图片:",
       "clear_button": "清空",
-      "total_time": "总耗时 {total}ms · 图片处理 {processing}ms · 向量化 {vectorization}ms · 数据库搜索 {database}ms",
+      "total_time": "总耗时 {total}ms · 图片处理 {processing}ms · 向量化 {vectorization}ms · 数据库搜索 {database}ms · 运行于阿里云 2C2G 云服务器",
       "all_results_shown": "已显示全部 {count} 个结果",
       "keyboard_shortcuts": "使用方向键导航 • +/- 缩放 • 0 重置 • ESC 关闭",
       "examples_title": "示例图片",
