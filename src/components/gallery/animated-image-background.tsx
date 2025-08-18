@@ -30,15 +30,15 @@ export function AnimatedImageBackground() {
       const windowWidth = window.innerWidth
       const windowHeight = window.innerHeight
       
-      const randomImages = getRandomImages(20)
-      const initialImages: ImageItem[] = Array.from({ length: 20 }, (_, i) => ({
+      const randomImages = getRandomImages(6)
+      const initialImages: ImageItem[] = Array.from({ length: 6 }, (_, i) => ({
         id: i,
         src: randomImages[i % randomImages.length],
         x: Math.random() * (windowWidth - 200), // 给边界留出空间
         y: Math.random() * (windowHeight - 200),
         speed: 0.5 + Math.random() * 1.0, // 0.5-1.5px per frame
         direction: Math.random() * 2 * Math.PI,
-        size: 100 + Math.random() * 60, // 100-160px
+        size: 300 + Math.random() * 60,
         opacity: 0.1 + Math.random() * 0.2 // 0.1-0.3（降低透明度）
       }))
 

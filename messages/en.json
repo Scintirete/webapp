@@ -161,7 +161,7 @@
       "text_label": "Text:",
       "image_label": "Image:",
       "clear_button": "Clear",
-      "total_time": "Total time {total}ms · Image processing {processing}ms · Vectorization {vectorization}ms · Database search {database}ms",
+      "total_time": "Total time {total}ms · Image processing {processing}ms · Vectorization {vectorization}ms · Database search {database}ms · Running on Alibaba Cloud 2C2G Cloud Server",
       "all_results_shown": "All {count} results displayed",
       "keyboard_shortcuts": "Use arrow keys to navigate • +/- to zoom • 0 to reset • ESC to close",
       "examples_title": "Example Images",
