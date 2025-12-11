@@ -42,5 +42,10 @@ ENV PORT=3000
 # 暴露端口
 EXPOSE 3000
 
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# 切换到非 root 用户
+USER appuser
+
 # 启动应用
 CMD ["node", "server.js"]
